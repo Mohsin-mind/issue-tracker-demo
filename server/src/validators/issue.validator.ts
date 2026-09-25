@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { IssuePriority } from '../constants/status.constants';
+import { IssuePriority, IssueType } from '../constants/status.constants';
 
 export const createIssueSchema = Joi.object({
   projectId: Joi.string().uuid().required().messages({
@@ -15,9 +15,14 @@ export const createIssueSchema = Joi.object({
     'string.min': 'Issue title must be at least 2 characters',
   }),
   description: Joi.string().trim().allow('', null).optional(),
+  type: Joi.string()
+    .valid(...Object.values(IssueType))
+    .default(IssueType.TASK)
+    .optional(),
   priority: Joi.string()
     .valid(...Object.values(IssuePriority))
     .default(IssuePriority.MEDIUM),
+  epicId: Joi.string().uuid().allow(null).optional(),
   assigneeId: Joi.string().uuid().allow(null).optional(),
   reporterId: Joi.string().uuid().required().messages({
     'string.empty': 'Reporter ID is required',
@@ -30,8 +35,10 @@ export const createIssueSchema = Joi.object({
 export const updateIssueSchema = Joi.object({
   title: Joi.string().trim().min(2).max(255).optional(),
   description: Joi.string().trim().allow('', null).optional(),
+  type: Joi.string().valid(...Object.values(IssueType)).optional(),
   priority: Joi.string().valid(...Object.values(IssuePriority)).optional(),
   columnId: Joi.string().uuid().optional(),
+  epicId: Joi.string().uuid().allow(null).optional(),
   assigneeId: Joi.string().uuid().allow(null).optional(),
   labelIds: Joi.array().items(Joi.string().uuid()).optional(),
   dueDate: Joi.date().iso().allow(null).optional(),
@@ -52,8 +59,10 @@ export const issueQuerySchema = Joi.object({
   projectId: Joi.string().uuid().optional(),
   columnId: Joi.string().uuid().optional(),
   search: Joi.string().trim().allow('').optional(),
+  type: Joi.string().valid(...Object.values(IssueType)).optional(),
   priority: Joi.string().valid(...Object.values(IssuePriority)).optional(),
   assigneeId: Joi.string().uuid().allow('unassigned').optional(),
+  epicId: Joi.string().uuid().allow('none').optional(),
   labelId: Joi.string().uuid().optional(),
 });
 

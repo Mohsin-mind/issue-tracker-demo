@@ -15,6 +15,7 @@ This document tracks the phased execution of the **Mini Jira/Trello Issue Tracke
 | **Phase 5** | Interactive Kanban Board with Drag & Drop | 🟢 Completed |
 | **Phase 6** | Issue Management, Detail Drawer, Comments & Filters | 🟢 Completed |
 | **Phase 7** | Polish, Responsive Design, AI Documentation & README | 🟢 Completed |
+| **Phase 8** | Epic Management & Issue Hierarchy | 🟢 Completed |
 
 ---
 
@@ -129,4 +130,61 @@ This document tracks the phased execution of the **Mini Jira/Trello Issue Tracke
   - [x] End-to-end user scenario validation (create project -> create issue -> drag & drop -> comment -> filter)
   - [x] Clean type check across entire monorepo with 0 errors
   - [x] Verified database tests (`pnpm run test:db` -> 6/6 passed) and API tests (`pnpm run test:api` -> 7/7 passed)
+
+---
+
+## Phase 8 — Epics, Issue Types & Hierarchy (Epic, Story, Bug, Task)
+- [x] **Database Layer (Models & Schema Sync)**:
+  - [x] Create `Epic` Sequelize model (`server/src/models/epic.model.ts`):
+    - `id` (UUID PK)
+    - `project_id` (UUID FK -> `projects.id`, ON DELETE CASCADE)
+    - `name` (string, max 100, not null)
+    - `description` (text, nullable)
+    - `color` (string hex code, e.g. `#8b5cf6`, `#f59e0b`, `#06b6d4`, `#ec4899`)
+    - `status` (ENUM: `'TODO'`, `'IN_PROGRESS'`, `'DONE'`, default `'TODO'`)
+    - `created_at`, `updated_at`
+  - [x] Update `Issue` model (`server/src/models/issue.model.ts`):
+    - Add `type` (ENUM: `'STORY'`, `'BUG'`, `'TASK'`, default `'TASK'`, not null)
+    - Add `epic_id` (UUID FK -> `epics.id`, nullable, ON DELETE SET NULL)
+  - [x] Define associations:
+    - `Project.hasMany(Epic, { foreignKey: 'project_id', as: 'epics' })`
+    - `Epic.belongsTo(Project, { foreignKey: 'project_id', as: 'project' })`
+    - `Epic.hasMany(Issue, { foreignKey: 'epic_id', as: 'issues' })`
+    - `Issue.belongsTo(Epic, { foreignKey: 'epic_id', as: 'epic' })`
+  - [x] Update seeders (`demo-data.seeder.ts`) to seed realistic demo Epics and populate `type` (`STORY`, `BUG`, `TASK`) and `epic_id` across demo issues
+- [x] **Backend RESTful APIs & Service Layer**:
+  - [x] Create Joi schemas (`server/src/validators/epic.validator.ts`):
+    - `createEpicSchema` (`name`, `description`, `color`, `status`)
+    - `updateEpicSchema` (`name`, `description`, `color`, `status`)
+    - `epicIdParamSchema` (`epicId`)
+  - [x] Update `issue.validator.ts` to validate `type` (`STORY`, `BUG`, `TASK`) and `epicId` (nullable UUID)
+  - [x] Create `EpicService` (`server/src/services/epic.service.ts`):
+    - `getEpicsByProject(projectId)` (with aggregated child issue counts and completion metrics)
+    - `getEpicById(epicId)` (with child issues list)
+    - `createEpic(projectId, data)`
+    - `updateEpic(epicId, data)`
+    - `deleteEpic(epicId)` (sets child `issue.epic_id` to null via foreign key cascade)
+  - [x] Implement `EpicController` (`server/src/controllers/epic.controller.ts`) and routes:
+    - `GET /api/projects/:projectId/epics`
+    - `POST /api/projects/:projectId/epics`
+    - `GET /api/epics/:epicId`
+    - `PUT /api/epics/:epicId`
+    - `DELETE /api/epics/:epicId`
+  - [x] Update `IssueService` to accept `type` and `epicId` on `createIssue` and `updateIssue`, and eager-load `Epic` association in `getProjectBoard`, `getIssueById`, and `getAllIssues`
+- [x] **Frontend Integration (Epic Badges, Issue Type Icons, Selectors & Board Panel)**:
+  - [x] Implement TypeScript types (`client/src/types/index.ts`): `Epic`, `EpicStatus`, `IssueType` (`'STORY' | 'BUG' | 'TASK'`)
+  - [x] Implement `epicService.ts` and TanStack Query hooks (`useEpics`, `useCreateEpic`, `useUpdateEpic`, `useDeleteEpic`)
+  - [x] Create `IssueTypeIcon.tsx` (📗 Story, 🔴 Bug, 📘 Task) with Jira visual semantics
+  - [x] Create `EpicBadge.tsx` displaying colored pill tag with Epic name
+  - [x] Display `IssueTypeIcon` and `EpicBadge` on Kanban cards (`IssueCard.tsx`)
+  - [x] Add Issue Type & Epic selectors in `CreateIssueModal.tsx`
+  - [x] Add Issue Type & Epic inline controls in `IssueDetailDrawer.tsx`
+  - [x] Add Issue Type and Epic filter dropdowns to `BoardFilterBar.tsx`
+  - [x] Add `CreateEpicModal.tsx` and Epics Drawer/Panel on the project board page showing progress bars (`done_issues / total_issues`)
+- [x] **Test Cases & Verification**:
+  - [x] Backend API test cases in `server/src/tests/api.test.ts` (Epic CRUD, issue type persistence, epic deletion orphan safety -> 8/8 tests passed)
+  - [x] Frontend unit tests for `EpicBadge`, `IssueTypeIcon`, and board filtering (10/10 test files, 51/51 tests passed)
+  - [x] Verification of monorepo build (`tsc` on server & `vite build` on client) with 0 errors
+
+
 

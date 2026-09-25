@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Project, Priority } from '../../types';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Project, Priority, IssueType } from '../../types';
 import { Modal, Input, Textarea, Select, Button } from '../../components/common';
 import { useCreateIssue } from '../../hooks/useCreateIssue';
 import { useUserStore } from '../../stores/userStore';
+import { useUsers } from '../../hooks/useUsers';
+import { useEpics } from '../../hooks/useEpics';
 
 export interface CreateIssueModalProps {
   isOpen: boolean;
@@ -19,9 +21,12 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
 }) => {
   const { currentUser } = useUserStore();
   const createIssueMutation = useCreateIssue();
+  const { data: epics } = useEpics(project.id);
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [type, setType] = useState<IssueType>('TASK');
+  const [epicId, setEpicId] = useState('');
   const [columnId, setColumnId] = useState('');
   const [priority, setPriority] = useState<Priority>('MEDIUM');
   const [assigneeId, setAssigneeId] = useState<string>('');
@@ -42,6 +47,20 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
     label: c.name,
   }));
 
+  const typeOptions = [
+    { value: 'TASK', label: '📘 Task' },
+    { value: 'STORY', label: '📗 Story' },
+    { value: 'BUG', label: '🔴 Bug' },
+  ];
+
+  const epicOptions = [
+    { value: '', label: 'None (No Epic)' },
+    ...(epics || []).map((e) => ({
+      value: e.id,
+      label: `⚡ ${e.name}`,
+    })),
+  ];
+
   const priorityOptions = [
     { value: 'LOW', label: '🟢 Low' },
     { value: 'MEDIUM', label: '🟡 Medium' },
@@ -49,9 +68,18 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
     { value: 'URGENT', label: '🔴 Urgent' },
   ];
 
+  const { data: users } = useUsers();
+
+  const availableMembers = useMemo(() => {
+    if (project.members && project.members.length > 0) {
+      return project.members;
+    }
+    return users || [];
+  }, [project.members, users]);
+
   const assigneeOptions = [
     { value: '', label: 'Unassigned' },
-    ...(project.members || []).map((m) => ({
+    ...availableMembers.map((m) => ({
       value: m.id,
       label: m.name,
     })),
@@ -82,6 +110,8 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         columnId,
         title: title.trim(),
         description: description.trim() || undefined,
+        type,
+        epicId: epicId || null,
         priority,
         assigneeId: assigneeId || null,
         reporterId: currentUser.id,
@@ -91,6 +121,8 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
       // Reset form
       setTitle('');
       setDescription('');
+      setType('TASK');
+      setEpicId('');
       setPriority('MEDIUM');
       setAssigneeId('');
       setDueDate('');
@@ -136,6 +168,25 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
           required
           autoFocus
         />
+
+        {/* Issue Type & Epic Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-[18px]">
+          <Select
+            label="Issue Type"
+            value={type}
+            onChange={(e) => setType(e.target.value as IssueType)}
+            options={typeOptions}
+            required
+          />
+
+          <Select
+            label="Epic"
+            value={epicId}
+            onChange={(e) => setEpicId(e.target.value)}
+            options={epicOptions}
+            helperText="Link this issue to an overarching initiative"
+          />
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-[18px]">
           <Select

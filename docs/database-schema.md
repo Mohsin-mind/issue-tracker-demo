@@ -65,11 +65,26 @@ The database uses PostgreSQL with Sequelize ORM. All entities use UUID v4 primar
 | `priority` | ENUM | NOT NULL, Default: 'MEDIUM' | 'LOW', 'MEDIUM', 'HIGH', 'URGENT' |
 | `assignee_id` | UUID | NULLABLE, FK -> users(id) ON DELETE SET NULL | Assigned user |
 | `reporter_id` | UUID | NOT NULL, FK -> users(id) ON DELETE RESTRICT | Reporting user |
+| `epic_id` | UUID | NULLABLE, FK -> epics(id) ON DELETE SET NULL | Optional parent Epic |
 | `position` | DOUBLE PRECISION | NOT NULL | Ordering position within column |
 | `due_date` | DATE | NULLABLE | Optional due date |
 | `created_at` | TIMESTAMP WITH TIME ZONE | NOT NULL, Default: NOW() | Creation timestamp |
 | `updated_at` | TIMESTAMP WITH TIME ZONE | NOT NULL, Default: NOW() | Update timestamp |
 | Unique index on `(project_id, issue_number)` guarantees unique project-scoped issue keys. |
+
+---
+
+### `epics`
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | UUID | PK, Default: UUIDV4 | Epic record ID |
+| `project_id` | UUID | NOT NULL, FK -> projects(id) ON DELETE CASCADE | Scoped project |
+| `name` | VARCHAR(100) | NOT NULL | Epic title (e.g. Authentication, Billing) |
+| `description` | TEXT | NULLABLE | Detailed description of the Epic initiative |
+| `color` | VARCHAR(20) | NOT NULL, Default: '#8b5cf6' | Distinctive theme color hex code |
+| `status` | ENUM | NOT NULL, Default: 'TODO' | 'TODO', 'IN_PROGRESS', 'DONE' |
+| `created_at` | TIMESTAMP WITH TIME ZONE | NOT NULL, Default: NOW() | Creation timestamp |
+| `updated_at` | TIMESTAMP WITH TIME ZONE | NOT NULL, Default: NOW() | Update timestamp |
 
 ---
 

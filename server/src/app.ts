@@ -33,6 +33,7 @@ app.get('/', (_req: Request, res: Response) => {
         projects: '/api/projects',
         issues: '/api/issues',
         users: '/api/users',
+        epics: '/api/epics',
       },
     },
   });

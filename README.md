@@ -44,13 +44,13 @@ A full-stack, production-grade project management application inspired by modern
 PORT=3000
 NODE_ENV=development
 
-DB_HOST=localhost
+DB_HOST=192.168.1.157
 DB_PORT=5432
 DB_NAME=mohsin_issue_tracker_demo
 DB_USER=postgres
 DB_PASSWORD=your_password
 
-CLIENT_URL=http://localhost:3001
+CLIENT_URL=http://192.168.1.157:3001
 ```
 
 ---
@@ -79,15 +79,15 @@ pnpm run db:reset
 cd server
 pnpm run dev
 ```
-*Health check:* `http://localhost:3000/api/health`  
-*API Handshake:* `http://localhost:3000/`
+*Health check:* `http://192.168.1.157:3000/api/health`  
+*API Handshake:* `http://192.168.1.157:3000/`
 
 #### Start Frontend (Port 3001):
 ```bash
 cd client
 pnpm run dev
 ```
-Open **`http://localhost:3001`** in your browser.
+Open **`http://192.168.1.157:3001`** in your browser.
 
 ---
 

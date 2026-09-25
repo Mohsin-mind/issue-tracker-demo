@@ -1,6 +1,6 @@
 # REST API Specification — Issue Tracker Demo
 
-Base URL: `http://localhost:5000/api`
+Base URL: `http://192.168.1.157:5000/api`
 
 Standard Response Structure:
 ```json
@@ -145,3 +145,43 @@ Returns labels scoped to the project.
   "color": "#3B82F6"
 }
 ```
+
+---
+
+## 5. Epics API
+
+### `GET /api/projects/:projectId/epics`
+Returns all epics for a project with aggregated statistics:
+- Total child issues count
+- Completed issues count
+- Completion percentage (`0` - `100%`)
+- List of child issues
+
+### `POST /api/projects/:projectId/epics`
+Creates a new epic scoped to the project.
+```json
+{
+  "name": "User Authentication & RBAC",
+  "description": "Multi-factor authentication, role-based access control and OAuth2 integrations",
+  "color": "#8b5cf6",
+  "status": "IN_PROGRESS"
+}
+```
+
+### `GET /api/epics/:epicId`
+Returns detailed information for a single epic including all linked child issues with their current columns and assignees.
+
+### `PUT /api/epics/:epicId`
+Updates epic metadata:
+```json
+{
+  "name": "Updated Epic Name",
+  "description": "Updated description",
+  "color": "#06b6d4",
+  "status": "DONE"
+}
+```
+
+### `DELETE /api/epics/:epicId`
+Deletes the epic and sets all child issues' `epic_id` to `null` (child issues are preserved).
+

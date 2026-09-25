@@ -8,3 +8,5 @@ export * from './Modal';
 export * from './ConfirmDialog';
 export * from './EmptyState';
 export * from './LoadingSkeleton';
+export * from './IssueTypeIcon';
+export * from './EpicBadge';

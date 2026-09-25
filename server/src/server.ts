@@ -6,7 +6,7 @@ const PORT = config.port;
 const startServer = async () => {
   try {
     app.listen(PORT, () => {
-      console.log(`🚀 Issue Tracker Server running on http://localhost:${PORT}`);
+      console.log(`🚀 Issue Tracker Server running on http://192.168.1.157:${PORT}`);
       console.log(`🌐 Environment: ${config.env}`);
     });
   } catch (error) {

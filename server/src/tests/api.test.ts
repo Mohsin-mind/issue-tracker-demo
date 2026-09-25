@@ -8,7 +8,7 @@ export const runApiTests = async (): Promise<boolean> => {
   console.log('========================================\n');
 
   let passedTests = 0;
-  const totalTests = 7;
+  const totalTests = 8;
 
   // Start temporary HTTP server to test real HTTP requests with fetch
   const testPort = 5999;
@@ -16,7 +16,7 @@ export const runApiTests = async (): Promise<boolean> => {
     const s = app.listen(testPort, () => resolve(s));
   });
 
-  const baseUrl = `http://localhost:${testPort}/api`;
+  const baseUrl = `http://192.168.1.157:${testPort}/api`;
 
   try {
     // Test 1: Health check endpoint
@@ -195,7 +195,7 @@ export const runApiTests = async (): Promise<boolean> => {
 
     // Clean up created test issue
     await fetch(`${baseUrl}/issues/${validIssueJson.data.id}`, { method: 'DELETE' });
-    await randomUser.destroy().catch(() => {});
+    await randomUser.destroy().catch(() => { });
 
     if (commentRes.status === 201 && deleteCommentRes.status === 200) {
       console.log('   ✅ PASSED: Comment created and deleted cleanly with standard envelopes.');
@@ -204,6 +204,89 @@ export const runApiTests = async (): Promise<boolean> => {
       console.error('   ❌ FAILED: Comment lifecycle failed:', {
         commentJson,
         deleteCommentJson,
+      });
+    }
+
+    // Test 8: Epic lifecycle and cascade safety
+    console.log('\n🔹 Test 8: Epic lifecycle (GET/POST/PUT/DELETE) & Cascade safety');
+    const epicsListRes = await fetch(`${baseUrl}/projects/${wolfProject.id}/epics`);
+    const epicsListJson = await epicsListRes.json();
+    const hasProgressFields = epicsListJson.data.length > 0 && 
+      'progress_percent' in epicsListJson.data[0] &&
+      'issues_count' in epicsListJson.data[0];
+
+    // Create an Epic
+    const createEpicRes = await fetch(`${baseUrl}/projects/${wolfProject.id}/epics`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'Automated Test Epic',
+        description: 'Test Epic Description',
+        color: '#8b5cf6',
+        status: 'IN_PROGRESS',
+      }),
+    });
+    const createEpicJson = await createEpicRes.json();
+    const testEpicId = createEpicJson.data.id;
+
+    // Create an issue attached to this Epic
+    const issueWithEpicRes = await fetch(`${baseUrl}/issues`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        projectId: wolfProject.id,
+        columnId: backlogCol!.id,
+        title: 'Issue linked to test epic',
+        type: 'STORY',
+        epicId: testEpicId,
+        priority: 'MEDIUM',
+        reporterId: reporter!.id,
+      }),
+    });
+    const issueWithEpicJson = await issueWithEpicRes.json();
+    const testIssueId = issueWithEpicJson.data.id;
+
+    // Update the Epic
+    const updateEpicRes = await fetch(`${baseUrl}/epics/${testEpicId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'Automated Test Epic - Updated',
+        status: 'DONE',
+      }),
+    });
+    const updateEpicJson = await updateEpicRes.json();
+
+    // Delete the Epic
+    const deleteEpicRes = await fetch(`${baseUrl}/epics/${testEpicId}`, {
+      method: 'DELETE',
+    });
+    const deleteEpicJson = await deleteEpicRes.json();
+
+    // Verify child issue still exists and its epic_id became null
+    const checkIssueRes = await fetch(`${baseUrl}/issues/${testIssueId}`);
+    const checkIssueJson = await checkIssueRes.json();
+
+    // Clean up test issue
+    await fetch(`${baseUrl}/issues/${testIssueId}`, { method: 'DELETE' });
+
+    if (
+      epicsListRes.status === 200 &&
+      hasProgressFields &&
+      createEpicRes.status === 201 &&
+      updateEpicRes.status === 200 &&
+      deleteEpicRes.status === 200 &&
+      checkIssueRes.status === 200 &&
+      checkIssueJson.data.epic_id === null
+    ) {
+      console.log('   ✅ PASSED: Epic created, fetched with progress metrics, updated, and deleted safely with nullified issue association.');
+      passedTests++;
+    } else {
+      console.error('   ❌ FAILED: Epic lifecycle test failed:', {
+        createEpicJson,
+        updateEpicJson,
+        deleteEpicJson,
+        checkIssueJson,
       });
     }
 
@@ -217,7 +300,7 @@ export const runApiTests = async (): Promise<boolean> => {
     return false;
   } finally {
     server.close();
-    await sequelize.close().catch(() => {});
+    await sequelize.close().catch(() => { });
   }
 };
 

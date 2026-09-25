@@ -122,6 +122,6 @@ pnpm run db:seed       # Run Sequelize seeders
 pnpm run db:reset      # Drop, migrate, and seed database
 
 # Frontend (from /client)
-pnpm run dev           # Start Vite dev server (http://localhost:3001)
+pnpm run dev           # Start Vite dev server (http://192.168.1.157:3001)
 pnpm run build         # Type-check and build production bundle
 ```

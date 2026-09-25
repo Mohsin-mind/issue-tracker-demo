@@ -8,10 +8,11 @@ import {
   Comment,
   ProjectMember,
   IssueLabel,
+  Epic,
   sequelize,
 } from '../models';
 import { AppError } from '../utils/app-error.util';
-import { HTTP_STATUS, IssuePriority } from '../constants/status.constants';
+import { HTTP_STATUS, IssuePriority, IssueType } from '../constants/status.constants';
 import { API_MESSAGES } from '../constants/messages.constants';
 
 export interface CreateIssueDto {
@@ -19,7 +20,9 @@ export interface CreateIssueDto {
   columnId: string;
   title: string;
   description?: string;
+  type?: IssueType;
   priority?: IssuePriority;
+  epicId?: string | null;
   assigneeId?: string | null;
   reporterId: string;
   labelIds?: string[];
@@ -29,8 +32,10 @@ export interface CreateIssueDto {
 export interface UpdateIssueDto {
   title?: string;
   description?: string | null;
+  type?: IssueType;
   priority?: IssuePriority;
   columnId?: string;
+  epicId?: string | null;
   assigneeId?: string | null;
   labelIds?: string[];
   dueDate?: string | null;
@@ -41,8 +46,10 @@ export interface IssueFilterDto {
   projectId?: string;
   columnId?: string;
   search?: string;
+  type?: string;
   priority?: string;
   assigneeId?: string;
+  epicId?: string;
   labelId?: string;
 }
 
@@ -84,6 +91,11 @@ export class IssueService {
         as: 'comments',
         attributes: ['id'],
       },
+      {
+        model: Epic,
+        as: 'epic',
+        attributes: ['id', 'name', 'color', 'status'],
+      },
     ];
 
     if (filters.projectId) {
@@ -92,6 +104,10 @@ export class IssueService {
 
     if (filters.columnId) {
       where.column_id = filters.columnId;
+    }
+
+    if (filters.type) {
+      where.type = filters.type;
     }
 
     if (filters.priority) {
@@ -103,6 +119,14 @@ export class IssueService {
         where.assignee_id = { [Op.is]: null };
       } else {
         where.assignee_id = filters.assigneeId;
+      }
+    }
+
+    if (filters.epicId) {
+      if (filters.epicId === 'none') {
+        where.epic_id = { [Op.is]: null };
+      } else {
+        where.epic_id = filters.epicId;
       }
     }
 
@@ -137,7 +161,7 @@ export class IssueService {
     });
 
     return issues.map((iss) => {
-      const plain = iss.get({ plain: true });
+      const plain = iss.get({ plain: true }) as any;
       return {
         ...plain,
         issue_key: plain.project ? `${plain.project.key}-${plain.issue_number}` : undefined,
@@ -168,14 +192,38 @@ export class IssueService {
 
     // Verify Assignee is project member if provided
     if (data.assigneeId) {
-      const isMember = await ProjectMember.findOne({
+      let isMember = await ProjectMember.findOne({
         where: { project_id: data.projectId, user_id: data.assigneeId },
       });
+      if (!isMember) {
+        const totalMembers = await ProjectMember.count({ where: { project_id: data.projectId } });
+        if (totalMembers === 0) {
+          const userExists = await User.findByPk(data.assigneeId);
+          if (userExists) {
+            await ProjectMember.create({ project_id: data.projectId, user_id: data.assigneeId });
+            isMember = true as any;
+          }
+        }
+      }
       if (!isMember) {
         throw new AppError(
           API_MESSAGES.ISSUE.INVALID_ASSIGNEE,
           HTTP_STATUS.BAD_REQUEST,
           'INVALID_ASSIGNEE'
+        );
+      }
+    }
+
+    // Verify Epic exists in project if provided
+    if (data.epicId) {
+      const epic = await Epic.findOne({
+        where: { id: data.epicId, project_id: data.projectId },
+      });
+      if (!epic) {
+        throw new AppError(
+          'Selected epic does not belong to this project',
+          HTTP_STATUS.BAD_REQUEST,
+          'INVALID_EPIC'
         );
       }
     }
@@ -208,7 +256,9 @@ export class IssueService {
           issue_number: nextIssueNumber,
           title: data.title,
           description: data.description || null,
+          type: data.type || IssueType.TASK,
           priority: data.priority || IssuePriority.MEDIUM,
+          epic_id: data.epicId || null,
           assignee_id: data.assigneeId || null,
           reporter_id: data.reporterId,
           position: nextPosition,
@@ -280,6 +330,11 @@ export class IssueService {
             },
           ],
         },
+        {
+          model: Epic,
+          as: 'epic',
+          attributes: ['id', 'name', 'color', 'status'],
+        },
       ],
       order: [[{ model: Comment, as: 'comments' }, 'created_at', 'ASC']],
     });
@@ -288,7 +343,7 @@ export class IssueService {
       throw new AppError(API_MESSAGES.ISSUE.NOT_FOUND, HTTP_STATUS.NOT_FOUND, 'ISSUE_NOT_FOUND');
     }
 
-    const plain = issue.get({ plain: true });
+    const plain = issue.get({ plain: true }) as any;
     return {
       ...plain,
       issue_key: plain.project ? `${plain.project.key}-${plain.issue_number}` : undefined,
@@ -307,9 +362,19 @@ export class IssueService {
 
     // If changing assignee, verify membership in project
     if (data.assigneeId !== undefined && data.assigneeId !== null) {
-      const isMember = await ProjectMember.findOne({
+      let isMember = await ProjectMember.findOne({
         where: { project_id: issue.project_id, user_id: data.assigneeId },
       });
+      if (!isMember) {
+        const totalMembers = await ProjectMember.count({ where: { project_id: issue.project_id } });
+        if (totalMembers === 0) {
+          const userExists = await User.findByPk(data.assigneeId);
+          if (userExists) {
+            await ProjectMember.create({ project_id: issue.project_id, user_id: data.assigneeId });
+            isMember = true as any;
+          }
+        }
+      }
       if (!isMember) {
         throw new AppError(
           API_MESSAGES.ISSUE.INVALID_ASSIGNEE,
@@ -319,13 +384,29 @@ export class IssueService {
       }
     }
 
+    // Verify Epic if provided
+    if (data.epicId !== undefined && data.epicId !== null) {
+      const epic = await Epic.findOne({
+        where: { id: data.epicId, project_id: issue.project_id },
+      });
+      if (!epic) {
+        throw new AppError(
+          'Selected epic does not belong to this project',
+          HTTP_STATUS.BAD_REQUEST,
+          'INVALID_EPIC'
+        );
+      }
+    }
+
     const transaction = await sequelize.transaction();
 
     try {
       if (data.title !== undefined) issue.title = data.title;
       if (data.description !== undefined) issue.description = data.description;
+      if (data.type !== undefined) issue.type = data.type;
       if (data.priority !== undefined) issue.priority = data.priority;
       if (data.columnId !== undefined) issue.column_id = data.columnId;
+      if (data.epicId !== undefined) issue.epic_id = data.epicId;
       if (data.assigneeId !== undefined) issue.assignee_id = data.assigneeId;
       if (data.dueDate !== undefined) issue.due_date = data.dueDate;
       if (data.position !== undefined) issue.position = data.position;

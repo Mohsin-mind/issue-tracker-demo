@@ -1,4 +1,21 @@
 export type Priority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT';
+export type IssueType = 'STORY' | 'BUG' | 'TASK';
+export type EpicStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
+
+export interface Epic {
+  id: string;
+  project_id: string;
+  name: string;
+  description?: string;
+  color: string;
+  status: EpicStatus;
+  issues_count?: number;
+  completed_count?: number;
+  progress_percent?: number;
+  issues?: Issue[];
+  created_at: string;
+  updated_at: string;
+}
 
 export interface User {
   id: string;
@@ -34,9 +51,12 @@ export interface Issue {
   issue_key?: string; // e.g. WOLF-1
   title: string;
   description?: string;
+  type: IssueType;
   priority: Priority;
   assignee_id?: string;
   reporter_id: string;
+  epic_id?: string | null;
+  epic?: Epic | null;
   position: number;
   due_date?: string;
   assignee?: User;
@@ -67,6 +87,7 @@ export interface Project {
   description?: string;
   members?: User[];
   columns?: BoardColumn[];
+  epics?: Epic[];
   issues_count?: number;
   members_count?: number;
   created_at: string;

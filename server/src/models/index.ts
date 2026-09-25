@@ -7,8 +7,32 @@ import { Issue } from './issue.model';
 import { Label } from './label.model';
 import { IssueLabel } from './issue-label.model';
 import { Comment } from './comment.model';
+import { Epic } from './epic.model';
 
 // --- Associations ---
+
+// Project <-> Epic (1:N)
+Project.hasMany(Epic, {
+  foreignKey: 'project_id',
+  as: 'epics',
+  onDelete: 'CASCADE',
+});
+Epic.belongsTo(Project, {
+  foreignKey: 'project_id',
+  as: 'project',
+});
+
+// Epic <-> Issue (1:N)
+Epic.hasMany(Issue, {
+  foreignKey: 'epic_id',
+  as: 'issues',
+  onDelete: 'SET NULL',
+});
+Issue.belongsTo(Epic, {
+  foreignKey: 'epic_id',
+  as: 'epic',
+  onDelete: 'SET NULL',
+});
 
 // Project <-> BoardColumn (1:N)
 Project.hasMany(BoardColumn, {
@@ -136,4 +160,5 @@ export {
   Label,
   IssueLabel,
   Comment,
+  Epic,
 };

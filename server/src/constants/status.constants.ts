@@ -5,6 +5,18 @@ export enum IssuePriority {
   URGENT = 'URGENT',
 }
 
+export enum IssueType {
+  STORY = 'STORY',
+  BUG = 'BUG',
+  TASK = 'TASK',
+}
+
+export enum EpicStatus {
+  TODO = 'TODO',
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE',
+}
+
 export const DEFAULT_COLUMNS = [
   { name: 'Backlog', position: 0 },
   { name: 'To Do', position: 1 },

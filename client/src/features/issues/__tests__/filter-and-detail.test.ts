@@ -7,6 +7,8 @@ describe('Phase 6: Filters and Detail Management Functional Logic', () => {
       id: 'iss-1',
       issue_key: 'WOLF-1',
       title: 'Fix authentication OAuth token refresh',
+      type: 'BUG',
+      epic_id: 'epic-1',
       priority: 'URGENT',
       column_id: 'col-1',
       project_id: 'proj-1',
@@ -21,6 +23,8 @@ describe('Phase 6: Filters and Detail Management Functional Logic', () => {
       id: 'iss-2',
       issue_key: 'WOLF-2',
       title: 'Implement dashboard chart analytics',
+      type: 'STORY',
+      epic_id: 'epic-1',
       priority: 'LOW',
       column_id: 'col-1',
       project_id: 'proj-1',
@@ -35,6 +39,8 @@ describe('Phase 6: Filters and Detail Management Functional Logic', () => {
       id: 'iss-3',
       issue_key: 'WOLF-3',
       title: 'Database connection pool optimization',
+      type: 'TASK',
+      epic_id: null,
       priority: 'HIGH',
       column_id: 'col-2',
       project_id: 'proj-1',
@@ -71,6 +77,24 @@ describe('Phase 6: Filters and Detail Management Functional Logic', () => {
       const results = mockIssues.filter((iss) => iss.priority === priority);
       expect(results.length).toBe(1);
       expect(results[0].id).toBe('iss-1');
+    });
+
+    it('filters issues by issue type', () => {
+      const results = mockIssues.filter((iss) => iss.type === 'BUG');
+      expect(results.length).toBe(1);
+      expect(results[0].id).toBe('iss-1');
+    });
+
+    it('filters issues by epic', () => {
+      const results = mockIssues.filter((iss) => iss.epic_id === 'epic-1');
+      expect(results.length).toBe(2);
+      expect(results.map((r) => r.id)).toEqual(['iss-1', 'iss-2']);
+    });
+
+    it('filters issues with no epic', () => {
+      const results = mockIssues.filter((iss) => !iss.epic_id);
+      expect(results.length).toBe(1);
+      expect(results[0].id).toBe('iss-3');
     });
 
     it('filters issues by unassigned status', () => {

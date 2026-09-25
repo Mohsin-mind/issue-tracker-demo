@@ -28,4 +28,10 @@ export const API_MESSAGES = {
     NOT_FOUND: 'Label not found',
     ALREADY_EXISTS: 'Label name already exists in this project',
   },
+  EPIC: {
+    CREATED: 'Epic created successfully',
+    UPDATED: 'Epic updated successfully',
+    DELETED: 'Epic deleted successfully',
+    NOT_FOUND: 'Epic not found',
+  },
 } as const;

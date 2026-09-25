@@ -1,14 +1,16 @@
 import { apiClient } from './api';
-import { Issue, ApiResponse, Priority } from '../types';
+import { Issue, ApiResponse, Priority, IssueType } from '../types';
 
 export interface CreateIssuePayload {
   projectId: string;
   columnId: string;
   title: string;
   description?: string;
+  type?: IssueType;
   priority?: Priority;
   assigneeId?: string | null;
   reporterId: string;
+  epicId?: string | null;
   labelIds?: string[];
   dueDate?: string | null;
 }
@@ -16,9 +18,11 @@ export interface CreateIssuePayload {
 export interface UpdateIssuePayload {
   title?: string;
   description?: string | null;
+  type?: IssueType;
   priority?: Priority;
   columnId?: string;
   assigneeId?: string | null;
+  epicId?: string | null;
   labelIds?: string[];
   dueDate?: string | null;
   position?: number;
@@ -28,8 +32,10 @@ export interface IssueFilterParams {
   projectId?: string;
   columnId?: string;
   search?: string;
+  type?: string;
   priority?: string;
   assigneeId?: string;
+  epicId?: string;
   labelId?: string;
 }
 

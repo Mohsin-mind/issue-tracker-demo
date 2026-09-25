@@ -1,26 +1,32 @@
 import React, { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Plus, ArrowLeft } from 'lucide-react';
+import { Plus, ArrowLeft, Layers } from 'lucide-react';
 import { useProjectBoard } from '../hooks/useProjectBoard';
+import { useEpics } from '../hooks/useEpics';
 import { Button, LoadingSkeleton, Avatar } from '../components/common';
 import { KanbanBoard } from '../features/board/KanbanBoard';
 import { BoardFilterBar, BoardFilters } from '../features/board/BoardFilterBar';
 import { CreateIssueModal } from '../features/issues/CreateIssueModal';
 import { IssueDetailDrawer } from '../features/issues/IssueDetailDrawer';
+import { EpicsDrawer } from '../features/epics';
 import { Issue } from '../types';
 
 export const ProjectBoardPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const { data: project, isLoading, error } = useProjectBoard(projectId);
+  const { data: epics } = useEpics(projectId);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEpicsDrawerOpen, setIsEpicsDrawerOpen] = useState(false);
   const [selectedColumnId, setSelectedColumnId] = useState<string | undefined>();
   const [selectedIssueId, setSelectedIssueId] = useState<string | null>(null);
 
   const [filters, setFilters] = useState<BoardFilters>({
     search: '',
+    type: '',
     priority: '',
     assigneeId: '',
+    epicId: '',
   });
 
   const handleQuickAdd = (columnId: string) => {
@@ -38,7 +44,7 @@ export const ProjectBoardPage: React.FC = () => {
   };
 
   const handleResetFilters = () => {
-    setFilters({ search: '', priority: '', assigneeId: '' });
+    setFilters({ search: '', type: '', priority: '', assigneeId: '', epicId: '' });
   };
 
   // Filter board issues based on active filters
@@ -56,12 +62,24 @@ export const ProjectBoardPage: React.FC = () => {
           if (!matchTitle && !matchKey) return false;
         }
 
-        // 2. Priority filter
+        // 2. Issue Type filter
+        if (filters.type && issue.type !== filters.type) {
+          return false;
+        }
+
+        // 3. Epic filter
+        if (filters.epicId === 'no_epic') {
+          if (issue.epic_id) return false;
+        } else if (filters.epicId && issue.epic_id !== filters.epicId) {
+          return false;
+        }
+
+        // 4. Priority filter
         if (filters.priority && issue.priority !== filters.priority) {
           return false;
         }
 
-        // 3. Assignee filter
+        // 5. Assignee filter
         if (filters.assigneeId === 'unassigned') {
           if (issue.assignee_id) return false;
         } else if (filters.assigneeId && issue.assignee_id !== filters.assigneeId) {
@@ -143,6 +161,15 @@ export const ProjectBoardPage: React.FC = () => {
           )}
 
           <Button
+            variant="secondary"
+            size="sm"
+            icon={<Layers size={15} />}
+            onClick={() => setIsEpicsDrawerOpen(true)}
+          >
+            Epics {epics && epics.length > 0 ? `(${epics.length})` : ''}
+          </Button>
+
+          <Button
             variant="primary"
             size="sm"
             icon={<Plus size={16} />}
@@ -180,6 +207,20 @@ export const ProjectBoardPage: React.FC = () => {
         <div className="flex-1 flex items-center justify-center text-slate-500 text-sm">
           No project data found.
         </div>
+      )}
+
+      {/* Epics Drawer */}
+      {projectId && (
+        <EpicsDrawer
+          isOpen={isEpicsDrawerOpen}
+          onClose={() => setIsEpicsDrawerOpen(false)}
+          projectId={projectId}
+          onSelectEpicFilter={(epicId) => {
+            setFilters((prev) => ({ ...prev, epicId }));
+            setIsEpicsDrawerOpen(false);
+          }}
+          activeEpicFilter={filters.epicId}
+        />
       )}
 
       {/* Create Issue Modal */}

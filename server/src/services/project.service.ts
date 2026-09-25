@@ -6,6 +6,7 @@ import {
   Label,
   Comment,
   ProjectMember,
+  Epic,
   sequelize,
 } from '../models';
 import { AppError } from '../utils/app-error.util';
@@ -35,7 +36,7 @@ export class ProjectService {
     });
 
     return projects.map((p) => {
-      const plain = p.get({ plain: true });
+      const plain = p.get({ plain: true }) as any;
       return {
         id: plain.id,
         name: plain.name,
@@ -90,10 +91,16 @@ export class ProjectService {
         { transaction }
       );
 
-      // Assign members if provided
-      if (data.memberIds && data.memberIds.length > 0) {
+      // Assign members: if provided use them; otherwise default to all existing users
+      let memberIds = data.memberIds;
+      if (!memberIds || memberIds.length === 0) {
+        const allUsers = await User.findAll({ attributes: ['id'], transaction });
+        memberIds = allUsers.map((u) => u.id);
+      }
+
+      if (memberIds && memberIds.length > 0) {
         await ProjectMember.bulkCreate(
-          data.memberIds.map((userId) => ({
+          memberIds.map((userId) => ({
             project_id: project.id,
             user_id: userId,
           })),
@@ -136,6 +143,22 @@ export class ProjectService {
         HTTP_STATUS.NOT_FOUND,
         'PROJECT_NOT_FOUND'
       );
+    }
+
+    // Auto-backfill members if project has no members assigned
+    const plainProj = project.get({ plain: true }) as any;
+    if (!plainProj.members || plainProj.members.length === 0) {
+      const allUsers = await User.findAll({ attributes: ['id', 'name', 'email', 'avatar_color'] });
+      if (allUsers.length > 0) {
+        await ProjectMember.bulkCreate(
+          allUsers.map((u) => ({
+            project_id: project.id,
+            user_id: u.id,
+          })),
+          { ignoreDuplicates: true }
+        );
+        (project as any).setDataValue('members', allUsers);
+      }
     }
 
     return project;
@@ -243,9 +266,19 @@ export class ProjectService {
                   as: 'comments',
                   attributes: ['id'],
                 },
+                {
+                  model: Epic,
+                  as: 'epic',
+                  attributes: ['id', 'name', 'color', 'status'],
+                },
               ],
             },
           ],
+        },
+        {
+          model: Epic,
+          as: 'epics',
+          attributes: ['id', 'name', 'description', 'color', 'status'],
         },
       ],
       order: [
@@ -262,7 +295,22 @@ export class ProjectService {
       );
     }
 
-    const plain = project.get({ plain: true });
+    const plain = project.get({ plain: true }) as any;
+
+    // Auto-backfill members if project has no members assigned
+    if (!plain.members || plain.members.length === 0) {
+      const allUsers = await User.findAll({ attributes: ['id', 'name', 'email', 'avatar_color'] });
+      if (allUsers.length > 0) {
+        await ProjectMember.bulkCreate(
+          allUsers.map((u) => ({
+            project_id: project.id,
+            user_id: u.id,
+          })),
+          { ignoreDuplicates: true }
+        );
+        plain.members = allUsers.map((u) => u.get({ plain: true }));
+      }
+    }
 
     // Format issues with comment count and issue_key
     const columnsWithFormattedIssues = plain.columns.map((col: any) => ({
@@ -302,7 +350,7 @@ export class ProjectService {
       );
     }
 
-    const plain = project.get({ plain: true });
+    const plain = project.get({ plain: true }) as any;
     let totalIssues = 0;
     let openIssues = 0;
     let inProgressIssues = 0;

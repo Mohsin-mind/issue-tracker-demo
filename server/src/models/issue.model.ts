@@ -1,6 +1,6 @@
 import { Model, DataTypes, Optional } from 'sequelize';
 import { sequelize } from '../config/database';
-import { IssuePriority } from '../constants/status.constants';
+import { IssuePriority, IssueType } from '../constants/status.constants';
 
 export interface IssueAttributes {
   id: string;
@@ -9,7 +9,9 @@ export interface IssueAttributes {
   issue_number: number;
   title: string;
   description?: string | null;
+  type: IssueType;
   priority: IssuePriority;
+  epic_id?: string | null;
   assignee_id?: string | null;
   reporter_id: string;
   position: number;
@@ -20,7 +22,7 @@ export interface IssueAttributes {
 
 export type IssueCreationAttributes = Optional<
   IssueAttributes,
-  'id' | 'description' | 'assignee_id' | 'due_date' | 'created_at' | 'updated_at'
+  'id' | 'type' | 'description' | 'epic_id' | 'assignee_id' | 'due_date' | 'created_at' | 'updated_at'
 >;
 
 export class Issue extends Model<IssueAttributes, IssueCreationAttributes> implements IssueAttributes {
@@ -30,7 +32,9 @@ export class Issue extends Model<IssueAttributes, IssueCreationAttributes> imple
   declare issue_number: number;
   declare title: string;
   declare description?: string | null;
+  declare type: IssueType;
   declare priority: IssuePriority;
+  declare epic_id?: string | null;
   declare assignee_id?: string | null;
   declare reporter_id: string;
   declare position: number;
@@ -43,6 +47,7 @@ export class Issue extends Model<IssueAttributes, IssueCreationAttributes> imple
   declare comments?: any[];
   declare assignee?: any;
   declare reporter?: any;
+  declare epic?: any;
   public project?: any;
 
   // Helper getter for formatted issue key if project is loaded
@@ -92,10 +97,24 @@ Issue.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
+    type: {
+      type: DataTypes.ENUM(...Object.values(IssueType)),
+      allowNull: false,
+      defaultValue: IssueType.TASK,
+    },
     priority: {
       type: DataTypes.ENUM(...Object.values(IssuePriority)),
       allowNull: false,
       defaultValue: IssuePriority.MEDIUM,
+    },
+    epic_id: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: 'epics',
+        key: 'id',
+      },
+      onDelete: 'SET NULL',
     },
     assignee_id: {
       type: DataTypes.UUID,
@@ -138,6 +157,9 @@ Issue.init(
       },
       {
         fields: ['assignee_id'],
+      },
+      {
+        fields: ['epic_id'],
       },
     ],
   }

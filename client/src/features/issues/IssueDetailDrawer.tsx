@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useUsers } from '../../hooks/useUsers';
+import { useEpics } from '../../hooks/useEpics';
 import {
   X,
   Trash2,
@@ -6,8 +8,9 @@ import {
   User as UserIcon,
   Layers,
   Tag,
+  Bookmark,
 } from 'lucide-react';
-import { Project, Priority } from '../../types';
+import { Project, Priority, IssueType } from '../../types';
 import { useIssue, useUpdateIssue, useDeleteIssue } from '../../hooks/useIssue';
 import {
   Avatar,
@@ -15,6 +18,8 @@ import {
   Button,
   ConfirmDialog,
   LoadingSkeleton,
+  IssueTypeIcon,
+  EpicBadge,
 } from '../../components/common';
 import { CommentsSection } from './CommentsSection';
 import { formatDate } from '../../utils/formatters';
@@ -35,6 +40,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
   const { data: issue, isLoading } = useIssue(issueId || undefined);
   const updateIssueMutation = useUpdateIssue();
   const deleteIssueMutation = useDeleteIssue();
+  const { data: epics } = useEpics(projectId);
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleValue, setTitleValue] = useState('');
@@ -43,6 +49,15 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
   const [descValue, setDescValue] = useState('');
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { data: users } = useUsers();
+
+  const availableMembers = useMemo(() => {
+    const list = [...(project.members && project.members.length > 0 ? project.members : users || [])];
+    if (issue?.assignee && !list.some((m) => m.id === issue.assignee?.id)) {
+      list.push(issue.assignee);
+    }
+    return list;
+  }, [project.members, users, issue?.assignee]);
 
   useEffect(() => {
     if (issue) {
@@ -87,6 +102,23 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
       issueId,
       projectId,
       payload: { columnId: newColumnId },
+    });
+  };
+
+  const handleTypeChange = async (newType: IssueType) => {
+    if (newType === issue?.type) return;
+    await updateIssueMutation.mutateAsync({
+      issueId,
+      projectId,
+      payload: { type: newType },
+    });
+  };
+
+  const handleEpicChange = async (newEpicId: string) => {
+    await updateIssueMutation.mutateAsync({
+      issueId,
+      projectId,
+      payload: { epicId: newEpicId || null },
     });
   };
 
@@ -137,9 +169,13 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
         {/* Header Bar */}
         <div className="h-16 px-6 border-b border-border-subtle flex items-center justify-between shrink-0 bg-slate-50/80">
           <div className="flex items-center gap-3">
+            <IssueTypeIcon type={issue?.type} size="md" />
             <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">
               {issue?.issue_key || '...'}
             </span>
+            {issue?.epic && (
+              <EpicBadge name={issue.epic.name} color={issue.epic.color} size="xs" />
+            )}
             <span className="text-xs text-slate-500 font-medium">in {project.name}</span>
           </div>
 
@@ -216,6 +252,43 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
 
             {/* Meta Properties Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-[18px] p-[22px] rounded-2xl bg-slate-50 border border-slate-200/90 shadow-2xs">
+              {/* Issue Type */}
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Bookmark size={13} className="text-emerald-500" />
+                  Issue Type
+                </span>
+                <select
+                  value={issue.type || 'TASK'}
+                  onChange={(e) => handleTypeChange(e.target.value as IssueType)}
+                  className="h-[42px] bg-white text-slate-800 text-xs font-medium rounded-xl px-[14px] pr-8 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
+                >
+                  <option value="TASK">📘 Task</option>
+                  <option value="STORY">📗 Story</option>
+                  <option value="BUG">🔴 Bug</option>
+                </select>
+              </div>
+
+              {/* Epic */}
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Layers size={13} className="text-purple-500" />
+                  Epic
+                </span>
+                <select
+                  value={issue.epic_id || ''}
+                  onChange={(e) => handleEpicChange(e.target.value)}
+                  className="h-[42px] bg-white text-slate-800 text-xs font-medium rounded-xl px-[14px] pr-8 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
+                >
+                  <option value="">None (No Epic)</option>
+                  {epics && epics.map((epic) => (
+                    <option key={epic.id} value={epic.id}>
+                      ⚡ {epic.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* Status / Column */}
               <div className="flex flex-col gap-1.5">
                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
@@ -276,7 +349,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
                     className="flex-1 h-[42px] bg-white text-slate-800 text-xs font-medium rounded-xl px-[14px] pr-8 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
                   >
                     <option value="">Unassigned</option>
-                    {(project.members || []).map((m) => (
+                    {availableMembers.map((m) => (
                       <option key={m.id} value={m.id}>
                         {m.name}
                       </option>

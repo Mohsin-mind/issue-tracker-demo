@@ -2,7 +2,7 @@ import React from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import { MessageSquare, Calendar, GripVertical } from 'lucide-react';
 import { Issue } from '../../types';
-import { Badge, Avatar } from '../../components/common';
+import { Badge, Avatar, IssueTypeIcon, EpicBadge } from '../../components/common';
 import { formatDate } from '../../utils/formatters';
 
 export interface IssueCardProps {
@@ -27,13 +27,14 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onClick }) =
               : 'border-slate-200/90 hover:border-indigo-300 hover:shadow-sm shadow-xs'
           }`}
         >
-          {/* Top Row: Key, Priority, Drag Handle */}
+          {/* Top Row: Type, Key, Priority, Drag Handle */}
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold font-mono text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded border border-indigo-100">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <IssueTypeIcon type={issue.type} size="sm" />
+              <span className="text-[11px] font-bold font-mono text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
                 {issue.issue_key}
               </span>
-              <Badge priority={issue.priority} className="text-[10px] py-0 px-2 uppercase font-semibold tracking-wider">
+              <Badge priority={issue.priority} className="text-[10px] py-0 px-1.5 uppercase font-semibold tracking-wider">
                 {issue.priority}
               </Badge>
             </div>
@@ -46,6 +47,13 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onClick }) =
               <GripVertical size={14} />
             </div>
           </div>
+
+          {/* Epic Tag (if linked) */}
+          {issue.epic && (
+            <div className="-mt-1">
+              <EpicBadge name={issue.epic.name} color={issue.epic.color} size="xs" />
+            </div>
+          )}
 
           {/* Issue Title */}
           <h4 className="text-xs font-semibold text-slate-800 group-hover:text-indigo-600 leading-snug line-clamp-2">
