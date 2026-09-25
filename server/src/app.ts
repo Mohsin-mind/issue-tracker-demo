@@ -18,6 +18,26 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Root Handshake Route
+app.get('/', (_req: Request, res: Response) => {
+  res.status(HTTP_STATUS.OK).json({
+    success: true,
+    message: 'Mini Jira/Trello Issue Tracker API Handshake Successful',
+    data: {
+      name: 'Issue Tracker API',
+      version: '1.0.0',
+      status: 'UP',
+      clientUrl: config.clientUrl,
+      endpoints: {
+        health: '/api/health',
+        projects: '/api/projects',
+        issues: '/api/issues',
+        users: '/api/users',
+      },
+    },
+  });
+});
+
 // API Routes
 app.use('/api', apiRoutes);
 

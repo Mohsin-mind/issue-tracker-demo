@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Plus, ArrowLeft } from 'lucide-react';
 import { useProjectBoard } from '../hooks/useProjectBoard';
 import { Button, LoadingSkeleton, Avatar } from '../components/common';
 import { KanbanBoard } from '../features/board/KanbanBoard';
+import { BoardFilterBar, BoardFilters } from '../features/board/BoardFilterBar';
 import { CreateIssueModal } from '../features/issues/CreateIssueModal';
+import { IssueDetailDrawer } from '../features/issues/IssueDetailDrawer';
 import { Issue } from '../types';
 
 export const ProjectBoardPage: React.FC = () => {
@@ -13,6 +15,13 @@ export const ProjectBoardPage: React.FC = () => {
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedColumnId, setSelectedColumnId] = useState<string | undefined>();
+  const [selectedIssueId, setSelectedIssueId] = useState<string | null>(null);
+
+  const [filters, setFilters] = useState<BoardFilters>({
+    search: '',
+    priority: '',
+    assigneeId: '',
+  });
 
   const handleQuickAdd = (columnId: string) => {
     setSelectedColumnId(columnId);
@@ -25,9 +34,48 @@ export const ProjectBoardPage: React.FC = () => {
   };
 
   const handleCardClick = (issue: Issue) => {
-    console.log('Selected issue for detail view:', issue.issue_key);
-    // Detail drawer integration in Phase 6
+    setSelectedIssueId(issue.id);
   };
+
+  const handleResetFilters = () => {
+    setFilters({ search: '', priority: '', assigneeId: '' });
+  };
+
+  // Filter board issues based on active filters
+  const filteredProject = useMemo(() => {
+    if (!project) return null;
+
+    const searchLower = filters.search.trim().toLowerCase();
+
+    const filteredColumns = (project.columns || []).map((col) => {
+      const issues = (col.issues || []).filter((issue) => {
+        // 1. Search query filter (title or issue key)
+        if (searchLower) {
+          const matchTitle = issue.title.toLowerCase().includes(searchLower);
+          const matchKey = issue.issue_key?.toLowerCase().includes(searchLower);
+          if (!matchTitle && !matchKey) return false;
+        }
+
+        // 2. Priority filter
+        if (filters.priority && issue.priority !== filters.priority) {
+          return false;
+        }
+
+        // 3. Assignee filter
+        if (filters.assigneeId === 'unassigned') {
+          if (issue.assignee_id) return false;
+        } else if (filters.assigneeId && issue.assignee_id !== filters.assigneeId) {
+          return false;
+        }
+
+        return true;
+      });
+
+      return { ...col, issues };
+    });
+
+    return { ...project, columns: filteredColumns };
+  }, [project, filters]);
 
   if (error) {
     return (
@@ -44,7 +92,7 @@ export const ProjectBoardPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col h-full gap-5 max-w-full">
+    <div className="flex flex-col h-full gap-4 max-w-full">
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 shrink-0">
         <div className="flex items-center gap-4">
@@ -105,6 +153,16 @@ export const ProjectBoardPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Filter Bar */}
+      {project && (
+        <BoardFilterBar
+          project={project}
+          filters={filters}
+          onFilterChange={setFilters}
+          onReset={handleResetFilters}
+        />
+      )}
+
       {/* Board Container */}
       {isLoading ? (
         <div className="flex-1 flex gap-4 overflow-x-auto pb-4">
@@ -112,9 +170,9 @@ export const ProjectBoardPage: React.FC = () => {
             <LoadingSkeleton key={i} type="column" />
           ))}
         </div>
-      ) : project ? (
+      ) : filteredProject ? (
         <KanbanBoard
-          project={project}
+          project={filteredProject}
           onQuickAddIssue={handleQuickAdd}
           onCardClick={handleCardClick}
         />
@@ -131,6 +189,16 @@ export const ProjectBoardPage: React.FC = () => {
           onClose={() => setIsCreateModalOpen(false)}
           project={project}
           defaultColumnId={selectedColumnId}
+        />
+      )}
+
+      {/* Issue Detail Drawer */}
+      {projectId && project && (
+        <IssueDetailDrawer
+          issueId={selectedIssueId}
+          projectId={projectId}
+          project={project}
+          onClose={() => setSelectedIssueId(null)}
         />
       )}
     </div>

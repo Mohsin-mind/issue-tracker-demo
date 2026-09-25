@@ -58,11 +58,10 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex-1 p-2.5 flex flex-col gap-2.5 overflow-y-auto min-h-[160px] transition-colors rounded-b-2xl ${
-              snapshot.isDraggingOver
+            className={`flex-1 p-2.5 flex flex-col gap-2.5 overflow-y-auto min-h-40 transition-colors rounded-b-2xl ${snapshot.isDraggingOver
                 ? 'bg-indigo-950/20 border-2 border-dashed border-indigo-500/40'
                 : 'border-2 border-transparent'
-            }`}
+              }`}
           >
             {issues.map((issue, index) => (
               <IssueCard

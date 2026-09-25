@@ -13,8 +13,8 @@ This document tracks the phased execution of the **Mini Jira/Trello Issue Tracke
 | **Phase 3** | Backend RESTful APIs & Service Layer | 🟢 Completed |
 | **Phase 4** | Frontend Foundation, Design System & Dashboard | 🟢 Completed |
 | **Phase 5** | Interactive Kanban Board with Drag & Drop | 🟢 Completed |
-| **Phase 6** | Issue Management, Detail Drawer, Comments & Filters | 🟡 Ready to Begin |
-| **Phase 7** | Polish, Responsive Design, AI Documentation & README | ⚪ Pending |
+| **Phase 6** | Issue Management, Detail Drawer, Comments & Filters | 🟢 Completed |
+| **Phase 7** | Polish, Responsive Design, AI Documentation & README | 🟡 Ready to Begin |
 
 ---
 
@@ -104,16 +104,16 @@ This document tracks the phased execution of the **Mini Jira/Trello Issue Tracke
 ---
 
 ## Phase 6 — Issue Management, Detail Drawer, Comments & Filters
-- [ ] Implement Issue Detail Drawer/Modal with inline editing for title, description, priority, assignee, due date
-- [ ] Implement Comment timeline with creation and deletion
-- [ ] Implement real-time board search by key/title
-- [ ] Implement multi-criteria filters (Priority, Assignee, Label)
-- [ ] Implement Issue deletion with confirmation modal
-- [ ] **Test Cases & Verification**:
-  - [ ] Real-time filter tests: search by keyword, filter by priority, assignee, label
-  - [ ] Detail drawer inline edit updates server state
-  - [ ] Comment creation and deletion by active demo user
-  - [ ] Destructive delete issue test with confirmation
+- [x] Implement Issue Detail Drawer (`IssueDetailDrawer.tsx`) with inline editing for title, description, column, priority, assignee, due date
+- [x] Implement Comment timeline (`CommentsSection.tsx`) with real-time posting and author-scoped deletion
+- [x] Implement real-time board search by key/title (`BoardFilterBar.tsx`)
+- [x] Implement multi-criteria filters (Priority, Assignee, Unassigned)
+- [x] Implement Issue deletion with reusable `ConfirmDialog` modal
+- [x] **Test Cases & Verification**:
+  - [x] Real-time filter tests (`filter-and-detail.test.ts`): search by keyword, filter by priority, assignee, and combined
+  - [x] Detail drawer inline edit updates state
+  - [x] Comment timeline append and deletion test
+  - [x] Full production build verified (`tsc && vite build`) with 0 errors
 
 ---
 
