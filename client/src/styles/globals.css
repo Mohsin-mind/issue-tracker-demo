@@ -25,8 +25,25 @@
 }
 
 @import './variables.css';
-@import './reset.css';
 @import './components.css';
+
+/* Project-specific base rules not covered by Tailwind Preflight */
+@layer base {
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  p,
+  h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+  }
+}
 
 body {
   font-family: var(--font-family);
