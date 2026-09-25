@@ -50,16 +50,16 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ issueId, proje
   };
 
   return (
-    <div className="flex flex-col gap-5 pt-4 border-t border-border-subtle/80">
+    <div className="flex flex-col gap-5 pt-4 border-t border-border-subtle">
       <div className="flex items-center gap-2">
-        <MessageSquare size={16} className="text-indigo-400" />
-        <h4 className="text-sm font-bold text-white tracking-wide">
+        <MessageSquare size={16} className="text-indigo-600" />
+        <h4 className="text-sm font-bold text-slate-900 tracking-wide">
           Activity & Comments ({comments?.length || 0})
         </h4>
       </div>
 
       {error && (
-        <div className="p-2.5 bg-red-500/15 border border-red-500/30 rounded-lg text-red-400 text-xs font-medium">
+        <div className="p-2.5 bg-red-50 border border-red-200 rounded-lg text-red-600 text-xs font-medium">
           {error}
         </div>
       )}
@@ -79,7 +79,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ issueId, proje
             onChange={(e) => setCommentBody(e.target.value)}
             placeholder={`Add a comment as ${currentUser?.name || 'anonymous'}...`}
             rows={2}
-            className="w-full bg-slate-900/90 text-slate-100 placeholder:text-slate-500 border border-border-subtle focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-xl p-3 text-xs resize-none transition-all outline-none"
+            className="w-full bg-slate-50 text-slate-800 placeholder:text-slate-400 border border-slate-200 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/15 rounded-xl p-3 text-xs resize-none transition-all outline-none"
           />
           <div className="flex justify-end">
             <Button
@@ -102,14 +102,14 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ issueId, proje
           <LoadingSkeleton height="60px" count={2} />
         </div>
       ) : comments && comments.length > 0 ? (
-        <div className="flex flex-col gap-3.5 mt-1">
+        <div className="flex flex-col gap-3 mt-1">
           {comments.map((comment) => {
             const isAuthor = currentUser?.id === comment.user_id;
 
             return (
               <div
                 key={comment.id}
-                className="group p-3 rounded-xl bg-slate-900/60 border border-border-subtle/70 flex gap-3 items-start hover:border-slate-700 transition-colors"
+                className="group p-3 rounded-xl bg-slate-50/90 border border-slate-200 flex gap-3 items-start hover:border-slate-300 transition-colors shadow-2xs"
               >
                 <Avatar
                   name={comment.user?.name || 'User'}
@@ -120,10 +120,10 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ issueId, proje
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-200">
+                      <span className="text-xs font-bold text-slate-900">
                         {comment.user?.name || 'Team Member'}
                       </span>
-                      <span className="text-[10px] text-slate-500">
+                      <span className="text-[10px] text-slate-400">
                         {formatRelativeTime(comment.created_at)}
                       </span>
                     </div>
@@ -132,7 +132,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ issueId, proje
                       <button
                         onClick={() => handleDelete(comment.id)}
                         disabled={deleteCommentMutation.isPending}
-                        className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 p-1 rounded transition-all cursor-pointer"
+                        className="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-red-500 p-1 rounded transition-all cursor-pointer"
                         title="Delete comment"
                       >
                         <Trash2 size={13} />
@@ -140,7 +140,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ issueId, proje
                     )}
                   </div>
 
-                  <p className="text-xs text-slate-300 leading-relaxed break-words whitespace-pre-wrap">
+                  <p className="text-xs text-slate-700 leading-relaxed break-words whitespace-pre-wrap">
                     {comment.body}
                   </p>
                 </div>
@@ -149,7 +149,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ issueId, proje
           })}
         </div>
       ) : (
-        <div className="py-6 text-center text-xs text-slate-500 border border-dashed border-border-subtle/60 rounded-xl">
+        <div className="py-6 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-xl">
           No comments yet. Start the conversation!
         </div>
       )}

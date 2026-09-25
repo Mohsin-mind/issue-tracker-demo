@@ -319,7 +319,7 @@ textarea.input-control {
   gap: var(--space-sm);
   padding: var(--space-md) var(--space-lg);
   border-top: 1px solid var(--border-subtle);
-  background-color: rgba(15, 23, 42, 0.3);
+  background-color: var(--bg-surface-hover);
 }
 
 /* --- Empty State Component --- */

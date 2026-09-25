@@ -32,7 +32,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
             {...props}
           >
             {options.map((opt) => (
-              <option key={opt.value} value={opt.value} style={{ background: '#1e293b', color: '#fff' }}>
+              <option key={opt.value} value={opt.value} style={{ background: '#ffffff', color: '#0f172a' }}>
                 {opt.label}
               </option>
             ))}

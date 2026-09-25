@@ -69,7 +69,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {error && (
-          <div className="p-3 bg-red-500/15 border border-red-500/30 rounded-lg text-red-400 text-xs font-medium">
+          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs font-medium">
             {error}
           </div>
         )}

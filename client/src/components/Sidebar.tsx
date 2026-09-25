@@ -10,17 +10,17 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`h-screen bg-slate-950 border-r border-border-subtle flex flex-col shrink-0 transition-all duration-300 ${
+      className={`h-screen bg-white border-r border-border-subtle flex flex-col shrink-0 transition-all duration-300 shadow-xs ${
         isSidebarCollapsed ? 'w-[72px]' : 'w-64'
       }`}
     >
       {/* Brand Header */}
       <div className="h-16 flex items-center px-4 border-b border-border-subtle gap-3">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 shrink-0">
           <Layers size={18} />
         </div>
         {!isSidebarCollapsed && (
-          <span className="font-display text-lg font-bold tracking-tight text-white">
+          <span className="font-display text-lg font-bold tracking-tight text-slate-900">
             AgileFlow
           </span>
         )}
@@ -33,8 +33,8 @@ export const Sidebar: React.FC = () => {
           className={({ isActive }) =>
             `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
               isActive
-                ? 'bg-indigo-500/15 text-indigo-400 font-semibold'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`
           }
           title="Dashboard"
@@ -48,8 +48,8 @@ export const Sidebar: React.FC = () => {
           className={({ isActive }) =>
             `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
               isActive
-                ? 'bg-indigo-500/15 text-indigo-400 font-semibold'
-                : 'text-slate-400 hover:text-white hover:bg-slate-900'
+                ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
             }`
           }
           title="Projects"
@@ -60,8 +60,8 @@ export const Sidebar: React.FC = () => {
 
         {/* Quick Project Boards */}
         {!isSidebarCollapsed && projects && projects.length > 0 && (
-          <div className="mt-4 pt-3 border-t border-border-subtle/60 flex flex-col gap-1">
-            <span className="text-[11px] font-bold text-slate-500 tracking-wider uppercase px-3 py-1">
+          <div className="mt-4 pt-3 border-t border-border-subtle flex flex-col gap-1">
+            <span className="text-[11px] font-bold text-slate-400 tracking-wider uppercase px-3 py-1">
               Active Boards
             </span>
             {projects.map((proj) => (
@@ -71,13 +71,13 @@ export const Sidebar: React.FC = () => {
                 className={({ isActive }) =>
                   `flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors truncate ${
                     isActive
-                      ? 'bg-indigo-500/15 text-indigo-400 font-semibold'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                      ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`
                 }
                 title={proj.name}
               >
-                <Hash size={13} className="text-indigo-400 shrink-0" />
+                <Hash size={13} className="text-indigo-500 shrink-0" />
                 <span className="truncate">{proj.name}</span>
               </NavLink>
             ))}
@@ -85,9 +85,9 @@ export const Sidebar: React.FC = () => {
         )}
 
         {/* Settings Footer */}
-        <div className="mt-auto pt-3 border-t border-border-subtle/60">
+        <div className="mt-auto pt-3 border-t border-border-subtle">
           <div
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-500 opacity-60 cursor-not-allowed"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 opacity-60 cursor-not-allowed"
             title="Settings"
           >
             <Settings size={18} className="shrink-0" />

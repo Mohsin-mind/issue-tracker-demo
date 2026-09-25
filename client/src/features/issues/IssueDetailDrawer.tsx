@@ -4,10 +4,8 @@ import {
   Trash2,
   Calendar,
   User as UserIcon,
-  Check,
-  Tag,
-  Clock,
   Layers,
+  Tag,
 } from 'lucide-react';
 import { Project, Priority } from '../../types';
 import { useIssue, useUpdateIssue, useDeleteIssue } from '../../hooks/useIssue';
@@ -130,32 +128,32 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
+        className="fixed inset-0 bg-slate-900/30 backdrop-blur-xs z-40 transition-opacity"
         onClick={onClose}
       />
 
       {/* Slide-over Drawer */}
-      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-2xl bg-slate-950 border-l border-border-subtle shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right duration-200">
+      <div className="fixed inset-y-0 right-0 z-50 w-full max-w-2xl bg-white border-l border-border-subtle shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right duration-200">
         {/* Header Bar */}
-        <div className="h-16 px-6 border-b border-border-subtle flex items-center justify-between shrink-0 bg-slate-900/40">
+        <div className="h-16 px-6 border-b border-border-subtle flex items-center justify-between shrink-0 bg-slate-50/80">
           <div className="flex items-center gap-3">
-            <span className="font-mono text-xs font-bold px-2.5 py-1 rounded bg-indigo-500/15 text-indigo-400 border border-indigo-500/20">
+            <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">
               {issue?.issue_key || '...'}
             </span>
-            <span className="text-xs text-slate-400 font-medium">in {project.name}</span>
+            <span className="text-xs text-slate-500 font-medium">in {project.name}</span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsDeleteDialogOpen(true)}
-              className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+              className="p-2 text-slate-400 hover:text-red-500 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
               title="Delete issue"
             >
               <Trash2 size={16} />
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+              className="p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
               title="Close drawer"
             >
               <X size={18} />
@@ -181,7 +179,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
                     value={titleValue}
                     onChange={(e) => setTitleValue(e.target.value)}
                     autoFocus
-                    className="w-full bg-slate-900 text-white font-bold text-lg px-3 py-2 rounded-lg border border-indigo-500 outline-none"
+                    className="w-full bg-white text-slate-900 font-bold text-lg px-3 py-2 rounded-xl border border-indigo-500 outline-none shadow-xs"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') handleSaveTitle();
                       if (e.key === 'Escape') setIsEditingTitle(false);
@@ -208,7 +206,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
               ) : (
                 <h2
                   onClick={() => setIsEditingTitle(true)}
-                  className="text-xl font-bold text-white tracking-tight cursor-pointer hover:bg-slate-900/80 p-1.5 -ml-1.5 rounded-lg transition-colors leading-snug"
+                  className="text-xl font-bold text-slate-900 tracking-tight cursor-pointer hover:bg-slate-50 p-2 -ml-2 rounded-xl transition-colors leading-snug"
                   title="Click to edit title"
                 >
                   {issue.title}
@@ -217,17 +215,17 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
             </div>
 
             {/* Meta Properties Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-900/60 border border-border-subtle/80">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200/90 shadow-2xs">
               {/* Status / Column */}
               <div className="flex flex-col gap-1.5">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Layers size={13} className="text-indigo-400" />
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Layers size={13} className="text-indigo-600" />
                   Status
                 </span>
                 <select
                   value={issue.column_id}
                   onChange={(e) => handleStatusChange(e.target.value)}
-                  className="bg-slate-800 text-slate-100 text-xs rounded-lg px-3 py-1.5 border border-border-subtle focus:border-indigo-500 outline-none cursor-pointer"
+                  className="bg-white text-slate-800 text-xs rounded-lg px-3 py-1.5 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
                 >
                   {(project.columns || []).map((col) => (
                     <option key={col.id} value={col.id}>
@@ -239,15 +237,15 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
 
               {/* Priority */}
               <div className="flex flex-col gap-1.5">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Tag size={13} className="text-amber-400" />
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Tag size={13} className="text-amber-500" />
                   Priority
                 </span>
                 <div className="flex items-center gap-2">
                   <select
                     value={issue.priority}
                     onChange={(e) => handlePriorityChange(e.target.value as Priority)}
-                    className="bg-slate-800 text-slate-100 text-xs rounded-lg px-3 py-1.5 border border-border-subtle focus:border-indigo-500 outline-none cursor-pointer"
+                    className="bg-white text-slate-800 text-xs rounded-lg px-3 py-1.5 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
                   >
                     <option value="LOW">Low</option>
                     <option value="MEDIUM">Medium</option>
@@ -260,8 +258,8 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
 
               {/* Assignee */}
               <div className="flex flex-col gap-1.5">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <UserIcon size={13} className="text-blue-400" />
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <UserIcon size={13} className="text-blue-500" />
                   Assignee
                 </span>
                 <div className="flex items-center gap-2">
@@ -275,7 +273,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
                   <select
                     value={issue.assignee_id || ''}
                     onChange={(e) => handleAssigneeChange(e.target.value)}
-                    className="flex-1 bg-slate-800 text-slate-100 text-xs rounded-lg px-3 py-1.5 border border-border-subtle focus:border-indigo-500 outline-none cursor-pointer"
+                    className="flex-1 bg-white text-slate-800 text-xs rounded-lg px-3 py-1.5 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
                   >
                     <option value="">Unassigned</option>
                     {(project.members || []).map((m) => (
@@ -289,15 +287,15 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
 
               {/* Due Date */}
               <div className="flex flex-col gap-1.5">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Calendar size={13} className="text-emerald-400" />
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Calendar size={13} className="text-emerald-500" />
                   Due Date
                 </span>
                 <input
                   type="date"
                   value={issue.due_date ? issue.due_date.slice(0, 10) : ''}
                   onChange={(e) => handleDueDateChange(e.target.value)}
-                  className="bg-slate-800 text-slate-100 text-xs rounded-lg px-3 py-1.5 border border-border-subtle focus:border-indigo-500 outline-none cursor-pointer"
+                  className="bg-white text-slate-800 text-xs rounded-lg px-3 py-1.5 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
                 />
               </div>
             </div>
@@ -305,13 +303,13 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
             {/* Description Section */}
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                   Description
                 </span>
                 {!isEditingDesc && (
                   <button
                     onClick={() => setIsEditingDesc(true)}
-                    className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 cursor-pointer"
+                    className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 cursor-pointer"
                   >
                     Edit
                   </button>
@@ -325,7 +323,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
                     onChange={(e) => setDescValue(e.target.value)}
                     rows={4}
                     autoFocus
-                    className="w-full bg-slate-900/90 text-slate-100 border border-indigo-500 rounded-xl p-3 text-xs resize-y outline-none leading-relaxed"
+                    className="w-full bg-white text-slate-800 border border-indigo-500 rounded-xl p-3 text-xs resize-y outline-none leading-relaxed shadow-xs"
                     placeholder="Add detailed description, reproduction steps, or requirements..."
                   />
                   <div className="flex gap-2">
@@ -349,20 +347,20 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
               ) : (
                 <div
                   onClick={() => setIsEditingDesc(true)}
-                  className="p-3.5 rounded-xl bg-slate-900/40 border border-border-subtle/60 text-xs text-slate-300 leading-relaxed cursor-pointer hover:border-slate-700 transition-colors min-h-[70px] whitespace-pre-wrap"
+                  className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 leading-relaxed cursor-pointer hover:border-slate-300 transition-colors min-h-[70px] whitespace-pre-wrap"
                 >
                   {issue.description || (
-                    <span className="text-slate-500 italic">No description provided. Click to add.</span>
+                    <span className="text-slate-400 italic">No description provided. Click to add.</span>
                   )}
                 </div>
               )}
             </div>
 
             {/* Reporter & Timestamps */}
-            <div className="flex items-center justify-between text-[11px] text-slate-500 border-t border-border-subtle/60 pt-3">
+            <div className="flex items-center justify-between text-[11px] text-slate-400 border-t border-border-subtle pt-3">
               <div className="flex items-center gap-1.5">
                 <span>Reported by</span>
-                <span className="font-semibold text-slate-300">
+                <span className="font-semibold text-slate-700">
                   {issue.reporter?.name || 'Team Member'}
                 </span>
               </div>

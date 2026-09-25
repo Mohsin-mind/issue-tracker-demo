@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, FolderKanban, Users, ArrowRight } from 'lucide-react';
+import { Plus, FolderKanban, Users } from 'lucide-react';
 import { useProjects } from '../hooks/useProjects';
 import {
   Button,
@@ -18,10 +18,10 @@ export const ProjectsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl font-bold tracking-tight text-white">
+          <h1 className="font-display text-3xl font-bold tracking-tight text-slate-900">
             Projects
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-500 text-sm mt-1">
             All team workspaces, agile boards, and project directories.
           </p>
         </div>
@@ -45,26 +45,26 @@ export const ProjectsPage: React.FC = () => {
           {projects.map((proj) => (
             <div
               key={proj.id}
-              className="bg-bg-surface rounded-xl border border-border-subtle hover:border-border-medium transition-all p-6 flex flex-col gap-4 shadow-sm hover:shadow-md"
+              className="bg-white rounded-2xl border border-border-subtle hover:border-slate-300 transition-all p-6 flex flex-col gap-4 shadow-xs hover:shadow-sm"
             >
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-400 text-xs font-bold font-mono">
+                <span className="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold font-mono">
                   {proj.key}
                 </span>
-                <span className="text-xs text-slate-400 font-medium">
+                <span className="text-xs text-slate-500 font-medium">
                   {proj.issues_count || 0} issues
                 </span>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <h3 className="text-lg font-bold text-white tracking-tight">{proj.name}</h3>
-                <p className="text-slate-300 text-sm line-clamp-3 leading-relaxed">
+                <h3 className="text-lg font-bold text-slate-900 tracking-tight">{proj.name}</h3>
+                <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed">
                   {proj.description || 'No description provided.'}
                 </p>
               </div>
 
-              <div className="mt-auto pt-4 border-t border-border-subtle/70 flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <div className="mt-auto pt-4 border-t border-border-subtle flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-xs text-slate-500">
                   <Users size={15} />
                   <span>{proj.members_count || 0} members</span>
                 </div>
