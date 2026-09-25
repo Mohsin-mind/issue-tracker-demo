@@ -6,13 +6,18 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
+    host: true, // Listen on all network addresses (0.0.0.0) without needing --host
     port: 3001,
     proxy: {
       '/api': {
-        target: 'http://192.168.1.157:3000',
+        target: 'http://localhost:3000',
         changeOrigin: true,
       },
     },
+  },
+  preview: {
+    host: true,
+    port: 3001,
   },
   test: {
     globals: true,
