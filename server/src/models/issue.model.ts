@@ -24,25 +24,25 @@ export type IssueCreationAttributes = Optional<
 >;
 
 export class Issue extends Model<IssueAttributes, IssueCreationAttributes> implements IssueAttributes {
-  public id!: string;
-  public project_id!: string;
-  public column_id!: string;
-  public issue_number!: number;
-  public title!: string;
-  public description?: string | null;
-  public priority!: IssuePriority;
-  public assignee_id?: string | null;
-  public reporter_id!: string;
-  public position!: number;
-  public due_date?: Date | string | null;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  declare id: string;
+  declare project_id: string;
+  declare column_id: string;
+  declare issue_number: number;
+  declare title: string;
+  declare description?: string | null;
+  declare priority: IssuePriority;
+  declare assignee_id?: string | null;
+  declare reporter_id: string;
+  declare position: number;
+  declare due_date?: Date | string | null;
+  declare readonly created_at: Date;
+  declare readonly updated_at: Date;
 
   // Eager loaded associations
-  public labels?: any[];
-  public comments?: any[];
-  public assignee?: any;
-  public reporter?: any;
+  declare labels?: any[];
+  declare comments?: any[];
+  declare assignee?: any;
+  declare reporter?: any;
   public project?: any;
 
   // Helper getter for formatted issue key if project is loaded

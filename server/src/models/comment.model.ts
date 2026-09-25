@@ -13,12 +13,12 @@ export interface CommentAttributes {
 export type CommentCreationAttributes = Optional<CommentAttributes, 'id' | 'created_at' | 'updated_at'>;
 
 export class Comment extends Model<CommentAttributes, CommentCreationAttributes> implements CommentAttributes {
-  public id!: string;
-  public issue_id!: string;
-  public user_id!: string;
-  public body!: string;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  declare id: string;
+  declare issue_id: string;
+  declare user_id: string;
+  declare body: string;
+  declare readonly created_at: Date;
+  declare readonly updated_at: Date;
 }
 
 Comment.init(

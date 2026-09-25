@@ -12,8 +12,8 @@ This document tracks the phased execution of the **Mini Jira/Trello Issue Tracke
 | **Phase 2** | Database Layer, Models, Migrations & Seeders | 🟢 Completed |
 | **Phase 3** | Backend RESTful APIs & Service Layer | 🟢 Completed |
 | **Phase 4** | Frontend Foundation, Design System & Dashboard | 🟢 Completed |
-| **Phase 5** | Interactive Kanban Board with Drag & Drop | 🟡 Ready to Begin |
-| **Phase 6** | Issue Management, Detail Drawer, Comments & Filters | ⚪ Pending |
+| **Phase 5** | Interactive Kanban Board with Drag & Drop | 🟢 Completed |
+| **Phase 6** | Issue Management, Detail Drawer, Comments & Filters | 🟡 Ready to Begin |
 | **Phase 7** | Polish, Responsive Design, AI Documentation & README | ⚪ Pending |
 
 ---
@@ -89,17 +89,17 @@ This document tracks the phased execution of the **Mini Jira/Trello Issue Tracke
 ---
 
 ## Phase 5 — Interactive Kanban Board with Drag & Drop
-- [ ] Implement Project Board layout (`/projects/:projectId`)
-- [ ] Implement Column component with status header, counter, and drop area
-- [ ] Implement IssueCard component with key, title, priority icon, assignee avatar, and labels
-- [ ] Integrate `@hello-pangea/dnd` for intra-column and cross-column reordering
-- [ ] Wire optimistic TanStack Query mutations with rollback on error
-- [ ] Implement Quick Issue creation modal
-- [ ] **Test Cases & Verification**:
-  - [ ] Drag-and-drop intra-column reordering test (verifying position updates)
-  - [ ] Drag-and-drop cross-column movement test (verifying column change)
-  - [ ] Optimistic UI update and error rollback simulation
-  - [ ] Card persistence verification upon page refresh
+- [x] Implement Project Board layout (`/projects/:projectId`) with team member avatars and header
+- [x] Implement Column component (`KanbanColumn.tsx`) with status header, counter, quick add button, and drop area
+- [x] Implement IssueCard component (`IssueCard.tsx`) with key, title, priority pill, assignee avatar, label pills, and comments count
+- [x] Integrate `@hello-pangea/dnd` for intra-column and cross-column reordering (`KanbanBoard.tsx`)
+- [x] Wire optimistic TanStack Query mutations with rollback on error (`useMoveIssue.ts`)
+- [x] Implement Quick Issue creation modal (`CreateIssueModal.tsx`) with column selection, priority, assignee, and due date
+- [x] **Test Cases & Verification**:
+  - [x] Drag-and-drop intra-column reordering and cross-column movement test (`board-functionality.test.ts`)
+  - [x] Optimistic UI update and error rollback verification
+  - [x] Database persistence tested and verified via backend API test suite (Test 6: `PATCH /api/issues/:issueId/move`)
+  - [x] Clean client production bundle built with 0 errors (`tsc && vite build`)
 
 ---
 

@@ -15,12 +15,12 @@ export interface ProjectAttributes {
 export type ProjectCreationAttributes = Optional<ProjectAttributes, 'id' | 'description' | 'created_at' | 'updated_at'>;
 
 export class Project extends Model<ProjectAttributes, ProjectCreationAttributes> implements ProjectAttributes {
-  public id!: string;
-  public name!: string;
-  public key!: string;
-  public description?: string;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  declare id: string;
+  declare name: string;
+  declare key: string;
+  declare description?: string;
+  declare readonly created_at: Date;
+  declare readonly updated_at: Date;
 
   // Association Mixins
   public getMembers!: BelongsToManyGetAssociationsMixin<User>;

@@ -12,11 +12,11 @@ export interface ProjectMemberAttributes {
 export type ProjectMemberCreationAttributes = Optional<ProjectMemberAttributes, 'id' | 'created_at' | 'updated_at'>;
 
 export class ProjectMember extends Model<ProjectMemberAttributes, ProjectMemberCreationAttributes> implements ProjectMemberAttributes {
-  public id!: string;
-  public project_id!: string;
-  public user_id!: string;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  declare id: string;
+  declare project_id: string;
+  declare user_id: string;
+  declare readonly created_at: Date;
+  declare readonly updated_at: Date;
 }
 
 ProjectMember.init(

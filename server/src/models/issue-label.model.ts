@@ -7,8 +7,8 @@ export interface IssueLabelAttributes {
 }
 
 export class IssueLabel extends Model<IssueLabelAttributes> implements IssueLabelAttributes {
-  public issue_id!: string;
-  public label_id!: string;
+  declare issue_id: string;
+  declare label_id: string;
 }
 
 IssueLabel.init(

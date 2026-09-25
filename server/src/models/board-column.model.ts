@@ -13,12 +13,12 @@ export interface BoardColumnAttributes {
 export type BoardColumnCreationAttributes = Optional<BoardColumnAttributes, 'id' | 'created_at' | 'updated_at'>;
 
 export class BoardColumn extends Model<BoardColumnAttributes, BoardColumnCreationAttributes> implements BoardColumnAttributes {
-  public id!: string;
-  public project_id!: string;
-  public name!: string;
-  public position!: number;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  declare id: string;
+  declare project_id: string;
+  declare name: string;
+  declare position: number;
+  declare readonly created_at: Date;
+  declare readonly updated_at: Date;
 }
 
 BoardColumn.init(

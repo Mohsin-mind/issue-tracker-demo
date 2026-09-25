@@ -115,13 +115,13 @@ issue-tracker-demo/
 
 ```bash
 # Backend (from /server)
-npm run dev           # Start Express dev server with tsx/nodemon
-npm run build         # Compile TypeScript
-npm run db:migrate    # Run Sequelize migrations
-npm run db:seed       # Run Sequelize seeders
-npm run db:reset      # Drop, migrate, and seed database
+pnpm run dev           # Start Express dev server with tsx/nodemon
+pnpm run build         # Compile TypeScript
+pnpm run db:migrate    # Run Sequelize migrations
+pnpm run db:seed       # Run Sequelize seeders
+pnpm run db:reset      # Drop, migrate, and seed database
 
 # Frontend (from /client)
-npm run dev           # Start Vite dev server (http://localhost:5173)
-npm run build         # Type-check and build production bundle
+pnpm run dev           # Start Vite dev server (http://localhost:3001)
+pnpm run build         # Type-check and build production bundle
 ```

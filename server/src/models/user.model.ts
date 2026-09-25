@@ -13,12 +13,12 @@ export interface UserAttributes {
 export type UserCreationAttributes = Optional<UserAttributes, 'id' | 'created_at' | 'updated_at'>;
 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-  public id!: string;
-  public name!: string;
-  public email!: string;
-  public avatar_color!: string;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  declare id: string;
+  declare name: string;
+  declare email: string;
+  declare avatar_color: string;
+  declare readonly created_at: Date;
+  declare readonly updated_at: Date;
 }
 
 User.init(

@@ -13,12 +13,12 @@ export interface LabelAttributes {
 export type LabelCreationAttributes = Optional<LabelAttributes, 'id' | 'created_at' | 'updated_at'>;
 
 export class Label extends Model<LabelAttributes, LabelCreationAttributes> implements LabelAttributes {
-  public id!: string;
-  public project_id!: string;
-  public name!: string;
-  public color!: string;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  declare id: string;
+  declare project_id: string;
+  declare name: string;
+  declare color: string;
+  declare readonly created_at: Date;
+  declare readonly updated_at: Date;
 }
 
 Label.init(
