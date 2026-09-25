@@ -2,6 +2,8 @@
    REUSABLE PRIMITIVE COMPONENT STYLES
    ========================================================== */
 
+@layer components {
+
 /* --- Button Component --- */
 .btn {
   display: inline-flex;
@@ -379,6 +381,9 @@ textarea.input-control {
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-sm);
 }
+
+
+} /* end @layer components */
 
 @keyframes shimmer {
   0% { background-position: 200% 0; }

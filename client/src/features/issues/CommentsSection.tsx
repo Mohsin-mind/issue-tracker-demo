@@ -79,7 +79,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ issueId, proje
             onChange={(e) => setCommentBody(e.target.value)}
             placeholder={`Add a comment as ${currentUser?.name || 'anonymous'}...`}
             rows={2}
-            className="w-full bg-slate-50 text-slate-800 placeholder:text-slate-400 border border-slate-200 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/15 rounded-xl p-3 text-xs resize-none transition-all outline-none"
+            className="w-full bg-slate-50 text-slate-800 placeholder:text-slate-400 border border-slate-200 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-500/15 rounded-xl p-[14px] text-xs resize-none transition-all outline-none"
           />
           <div className="flex justify-end">
             <Button
@@ -109,7 +109,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({ issueId, proje
             return (
               <div
                 key={comment.id}
-                className="group p-3 rounded-xl bg-slate-50/90 border border-slate-200 flex gap-3 items-start hover:border-slate-300 transition-colors shadow-2xs"
+                className="group p-4 rounded-xl bg-slate-50/90 border border-slate-200 flex gap-[14px] items-start hover:border-slate-300 transition-colors shadow-2xs"
               >
                 <Avatar
                   name={comment.user?.name || 'User'}

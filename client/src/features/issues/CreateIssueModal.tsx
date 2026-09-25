@@ -121,9 +121,9 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5 py-1">
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs font-medium">
+          <div className="p-[14px] bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs font-medium">
             {error}
           </div>
         )}
@@ -137,7 +137,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
           autoFocus
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-[18px]">
           <Select
             label="Column"
             value={columnId}
@@ -155,7 +155,7 @@ export const CreateIssueModal: React.FC<CreateIssueModalProps> = ({
           />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-[18px]">
           <Select
             label="Assignee"
             value={assigneeId}

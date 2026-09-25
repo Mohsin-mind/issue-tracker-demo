@@ -215,7 +215,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
             </div>
 
             {/* Meta Properties Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-200/90 shadow-2xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-[18px] p-[22px] rounded-2xl bg-slate-50 border border-slate-200/90 shadow-2xs">
               {/* Status / Column */}
               <div className="flex flex-col gap-1.5">
                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
@@ -225,7 +225,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
                 <select
                   value={issue.column_id}
                   onChange={(e) => handleStatusChange(e.target.value)}
-                  className="h-10 bg-white text-slate-800 text-xs font-medium rounded-xl px-3.5 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
+                  className="h-[42px] bg-white text-slate-800 text-xs font-medium rounded-xl px-[14px] pr-8 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
                 >
                   {(project.columns || []).map((col) => (
                     <option key={col.id} value={col.id}>
@@ -245,7 +245,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
                   <select
                     value={issue.priority}
                     onChange={(e) => handlePriorityChange(e.target.value as Priority)}
-                    className="flex-1 h-10 bg-white text-slate-800 text-xs font-medium rounded-xl px-3.5 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
+                    className="flex-1 h-[42px] bg-white text-slate-800 text-xs font-medium rounded-xl px-[14px] pr-8 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
                   >
                     <option value="LOW">Low</option>
                     <option value="MEDIUM">Medium</option>
@@ -273,7 +273,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
                   <select
                     value={issue.assignee_id || ''}
                     onChange={(e) => handleAssigneeChange(e.target.value)}
-                    className="flex-1 h-10 bg-white text-slate-800 text-xs font-medium rounded-xl px-3.5 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
+                    className="flex-1 h-[42px] bg-white text-slate-800 text-xs font-medium rounded-xl px-[14px] pr-8 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
                   >
                     <option value="">Unassigned</option>
                     {(project.members || []).map((m) => (
@@ -295,7 +295,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
                   type="date"
                   value={issue.due_date ? issue.due_date.slice(0, 10) : ''}
                   onChange={(e) => handleDueDateChange(e.target.value)}
-                  className="h-10 bg-white text-slate-800 text-xs font-medium rounded-xl px-3.5 border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
+                  className="h-[42px] bg-white text-slate-800 text-xs font-medium rounded-xl px-[14px] border border-slate-200 focus:border-indigo-500 outline-none cursor-pointer shadow-2xs"
                 />
               </div>
             </div>
@@ -323,7 +323,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
                     onChange={(e) => setDescValue(e.target.value)}
                     rows={4}
                     autoFocus
-                    className="w-full bg-white text-slate-800 border border-indigo-500 rounded-xl p-3 text-xs resize-y outline-none leading-relaxed shadow-xs"
+                    className="w-full bg-white text-slate-800 border border-indigo-500 rounded-xl p-[14px] text-xs resize-y outline-none leading-relaxed shadow-xs"
                     placeholder="Add detailed description, reproduction steps, or requirements..."
                   />
                   <div className="flex gap-2">
@@ -347,7 +347,7 @@ export const IssueDetailDrawer: React.FC<IssueDetailDrawerProps> = ({
               ) : (
                 <div
                   onClick={() => setIsEditingDesc(true)}
-                  className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 leading-relaxed cursor-pointer hover:border-slate-300 transition-colors min-h-[70px] whitespace-pre-wrap"
+                  className="p-[14px] rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 leading-relaxed cursor-pointer hover:border-slate-300 transition-colors min-h-[70px] whitespace-pre-wrap"
                 >
                   {issue.description || (
                     <span className="text-slate-400 italic">No description provided. Click to add.</span>

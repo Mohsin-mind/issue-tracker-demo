@@ -31,7 +31,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
   return (
     <div className="w-80 shrink-0 bg-slate-100/90 border border-slate-200/90 rounded-2xl flex flex-col max-h-full shadow-2xs">
       {/* Column Header */}
-      <div className="px-4 py-3 flex items-center justify-between border-b border-slate-200/80">
+      <div className="px-[18px] py-[14px] flex items-center justify-between border-b border-slate-200/80">
         <div className="flex items-center gap-2.5">
           <span className={`w-2.5 h-2.5 rounded-full ${getColumnDotColor(column.name)}`} />
           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
@@ -58,7 +58,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`flex-1 p-3 flex flex-col gap-3 overflow-y-auto min-h-44 transition-colors rounded-b-2xl ${
+            className={`flex-1 p-[14px] flex flex-col gap-[14px] overflow-y-auto min-h-48 transition-colors rounded-b-2xl ${
               snapshot.isDraggingOver
                 ? 'bg-indigo-50/70 border-2 border-dashed border-indigo-400/60'
                 : 'border-2 border-transparent'
@@ -76,7 +76,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({
             {provided.placeholder}
 
             {issues.length === 0 && !snapshot.isDraggingOver && (
-              <div className="h-32 border border-dashed border-slate-300 rounded-xl flex items-center justify-center text-slate-400 text-xs font-medium">
+              <div className="h-36 border border-dashed border-slate-300 rounded-xl flex items-center justify-center text-slate-400 text-xs font-medium p-4">
                 No issues in column
               </div>
             )}

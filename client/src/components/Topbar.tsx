@@ -31,21 +31,21 @@ export const Topbar: React.FC = () => {
         <div className="relative flex-1 max-w-md">
           <Search
             size={17}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
           />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search issues, keys across projects..."
-            className="w-full h-10 bg-slate-100/90 text-slate-900 placeholder:text-slate-400 border border-slate-200/90 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 rounded-xl pl-11 pr-4 text-xs font-medium transition-all outline-none shadow-2xs"
+            className="w-full h-[42px] bg-slate-100/90 text-slate-900 placeholder:text-slate-400 border border-slate-200/90 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 rounded-xl pl-[46px] pr-4 text-xs font-medium transition-all outline-none shadow-2xs"
           />
         </div>
       </div>
 
       <div className="flex items-center gap-4">
         {/* Active Persona Pill */}
-        <div className="flex items-center gap-3 bg-slate-50 border border-slate-200/90 px-3.5 py-1.5 rounded-xl shadow-2xs">
+        <div className="flex items-center gap-[14px] bg-slate-50 border border-slate-200/90 px-4 py-2 rounded-xl shadow-2xs">
           <Avatar
             name={currentUser?.name}
             color={currentUser?.avatar_color}
@@ -61,7 +61,7 @@ export const Topbar: React.FC = () => {
           </div>
 
           {users && users.length > 0 && (
-            <div className="relative flex items-center pl-1 border-l border-slate-200">
+            <div className="relative flex items-center pl-2 border-l border-slate-200">
               <select
                 value={currentUser?.id}
                 onChange={(e) => {

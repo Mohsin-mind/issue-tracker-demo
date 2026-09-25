@@ -13,7 +13,7 @@ describe('Badge Component', () => {
     const { container } = render(<Badge priority="URGENT">URGENT</Badge>);
     const badge = container.querySelector('.badge-pill');
     expect(badge).toBeInTheDocument();
-    expect(badge?.className).toContain('priority-urgent');
+    expect(badge?.className).toContain('badge-urgent');
   });
 
   it('applies custom inline styles when color is provided', () => {

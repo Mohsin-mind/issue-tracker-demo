@@ -61,8 +61,8 @@ export const DashboardPage: React.FC = () => {
   // Top 6 recently updated issues
   const sortedRecent = recentIssues && Array.isArray(recentIssues)
     ? [...recentIssues]
-        .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
-        .slice(0, 6)
+      .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+      .slice(0, 6)
     : [];
 
   return (
@@ -89,14 +89,14 @@ export const DashboardPage: React.FC = () => {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 flex flex-col gap-2 shadow-xs hover:shadow-md transition-shadow">
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 flex flex-col justify-between min-h-[145px] shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between text-slate-500">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Total Issues</span>
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
               <Layers size={19} />
             </div>
           </div>
-          <div className="font-display text-3xl font-extrabold text-slate-900 mt-1">
+          <div className="font-display text-3xl font-extrabold text-slate-900 my-1">
             {isProjectsLoading ? <LoadingSkeleton width="60px" height="32px" /> : totalIssuesCount}
           </div>
           <span className="text-xs text-slate-500 font-medium">
@@ -104,40 +104,40 @@ export const DashboardPage: React.FC = () => {
           </span>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 flex flex-col gap-2 shadow-xs hover:shadow-md transition-shadow">
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 flex flex-col justify-between min-h-[145px] shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between text-slate-500">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Open / Backlog</span>
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
               <AlertCircle size={19} />
             </div>
           </div>
-          <div className="font-display text-3xl font-extrabold text-slate-900 mt-1">
+          <div className="font-display text-3xl font-extrabold text-slate-900 my-1">
             {isIssuesLoading ? <LoadingSkeleton width="60px" height="32px" /> : openCount}
           </div>
           <span className="text-xs text-slate-500 font-medium">Ready for sprint triage</span>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 flex flex-col gap-2 shadow-xs hover:shadow-md transition-shadow">
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 flex flex-col justify-between min-h-[145px] shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between text-slate-500">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">In Progress</span>
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
               <Clock size={19} />
             </div>
           </div>
-          <div className="font-display text-3xl font-extrabold text-slate-900 mt-1">
+          <div className="font-display text-3xl font-extrabold text-slate-900 my-1">
             {isIssuesLoading ? <LoadingSkeleton width="60px" height="32px" /> : inProgressCount}
           </div>
           <span className="text-xs text-slate-500 font-medium">Actively under development</span>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 flex flex-col gap-2 shadow-xs hover:shadow-md transition-shadow">
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/90 flex flex-col justify-between min-h-[145px] shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between text-slate-500">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Done</span>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
               <CheckCircle2 size={19} />
             </div>
           </div>
-          <div className="font-display text-3xl font-extrabold text-slate-900 mt-1">
+          <div className="font-display text-3xl font-extrabold text-slate-900 my-1">
             {isIssuesLoading ? <LoadingSkeleton width="60px" height="32px" /> : doneCount}
           </div>
           <span className="text-xs text-slate-500 font-medium">Shipped & verified</span>
@@ -165,7 +165,7 @@ export const DashboardPage: React.FC = () => {
               {projects.map((proj) => (
                 <div
                   key={proj.id}
-                  className="bg-white p-6 rounded-2xl border border-slate-200/90 hover:border-indigo-200 transition-all flex flex-col gap-3.5 shadow-xs hover:shadow-sm"
+                  className="bg-white p-6 rounded-2xl border border-slate-200/90 hover:border-indigo-200 transition-all flex flex-col justify-between min-h-40 gap-4 shadow-xs hover:shadow-sm"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -183,7 +183,7 @@ export const DashboardPage: React.FC = () => {
                     {proj.description || 'No description provided.'}
                   </p>
 
-                  <div className="flex items-center justify-between pt-4 mt-1 border-t border-slate-100">
+                  <div className="flex items-center justify-between pt-[18px] mt-1 border-t border-slate-100">
                     <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
                       <Users size={15} className="text-slate-400" />
                       <span>{proj.members_count || 0} team members</span>
@@ -217,7 +217,7 @@ export const DashboardPage: React.FC = () => {
             </h2>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-4 flex flex-col gap-3 shadow-xs">
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 flex flex-col gap-[14px] shadow-xs">
             {isIssuesLoading ? (
               <LoadingSkeleton type="card" count={4} height="76px" />
             ) : sortedRecent.length > 0 ? (
@@ -225,7 +225,7 @@ export const DashboardPage: React.FC = () => {
                 <Link
                   key={iss.id}
                   to={`/projects/${iss.project_id}`}
-                  className="p-3.5 rounded-xl bg-slate-50/80 hover:bg-slate-100/90 border border-slate-200/80 hover:border-slate-300 transition-all flex items-center justify-between gap-4 shadow-2xs"
+                  className="p-4 rounded-xl bg-slate-50/80 hover:bg-slate-100/90 border border-slate-200/80 hover:border-slate-300 transition-all flex items-center justify-between gap-4 shadow-2xs"
                 >
                   <div className="flex flex-col gap-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -239,7 +239,7 @@ export const DashboardPage: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2.5 shrink-0">
+                  <div className="flex items-center gap-3 shrink-0">
                     {iss.assignee && (
                       <Avatar
                         name={iss.assignee.name}

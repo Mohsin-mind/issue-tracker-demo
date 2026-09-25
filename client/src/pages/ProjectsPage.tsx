@@ -45,7 +45,7 @@ export const ProjectsPage: React.FC = () => {
           {projects.map((proj) => (
             <div
               key={proj.id}
-              className="bg-white rounded-2xl border border-border-subtle hover:border-slate-300 transition-all p-6 flex flex-col gap-4 shadow-xs hover:shadow-sm"
+              className="bg-white rounded-2xl border border-border-subtle hover:border-slate-300 transition-all p-6 flex flex-col justify-between min-h-[220px] gap-4 shadow-xs hover:shadow-sm"
             >
               <div className="flex items-center justify-between">
                 <span className="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold font-mono">
@@ -56,14 +56,14 @@ export const ProjectsPage: React.FC = () => {
                 </span>
               </div>
 
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1.5 my-1">
                 <h3 className="text-lg font-bold text-slate-900 tracking-tight">{proj.name}</h3>
                 <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed">
                   {proj.description || 'No description provided.'}
                 </p>
               </div>
 
-              <div className="mt-auto pt-4 border-t border-border-subtle flex items-center justify-between">
+              <div className="mt-auto pt-[18px] border-t border-border-subtle flex items-center justify-between">
                 <div className="flex items-center gap-1.5 text-xs text-slate-500">
                   <Users size={15} />
                   <span>{proj.members_count || 0} members</span>

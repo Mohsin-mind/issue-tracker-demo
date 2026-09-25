@@ -27,11 +27,11 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3.5 flex flex-col gap-1.5 overflow-y-auto">
+      <nav className="flex-1 p-[14px] flex flex-col gap-1.5 overflow-y-auto">
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+            `flex items-center gap-3 px-[14px] py-2.5 rounded-xl text-sm font-semibold transition-all ${
               isActive
                 ? 'bg-indigo-50 text-indigo-700 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -46,7 +46,7 @@ export const Sidebar: React.FC = () => {
         <NavLink
           to="/projects"
           className={({ isActive }) =>
-            `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+            `flex items-center gap-3 px-[14px] py-2.5 rounded-xl text-sm font-semibold transition-all ${
               isActive
                 ? 'bg-indigo-50 text-indigo-700 shadow-2xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -60,8 +60,8 @@ export const Sidebar: React.FC = () => {
 
         {/* Quick Project Boards */}
         {!isSidebarCollapsed && projects && projects.length > 0 && (
-          <div className="mt-5 pt-3.5 border-t border-slate-100 flex flex-col gap-1">
-            <span className="text-[11px] font-bold text-slate-400 tracking-wider uppercase px-3.5 py-1">
+          <div className="mt-5 pt-[14px] border-t border-slate-100 flex flex-col gap-1">
+            <span className="text-[11px] font-bold text-slate-400 tracking-wider uppercase px-[14px] py-1">
               Active Boards
             </span>
             {projects.map((proj) => (
@@ -69,7 +69,7 @@ export const Sidebar: React.FC = () => {
                 key={proj.id}
                 to={`/projects/${proj.id}`}
                 className={({ isActive }) =>
-                  `flex items-center gap-2.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all truncate ${
+                  `flex items-center gap-2.5 px-[14px] py-2 rounded-lg text-xs font-medium transition-all truncate ${
                     isActive
                       ? 'bg-indigo-50 text-indigo-700 font-bold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -87,7 +87,7 @@ export const Sidebar: React.FC = () => {
         {/* Settings Footer */}
         <div className="mt-auto pt-3 border-t border-slate-100">
           <div
-            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 opacity-60 cursor-not-allowed"
+            className="flex items-center gap-3 px-[14px] py-2.5 rounded-xl text-sm font-medium text-slate-400 opacity-60 cursor-not-allowed"
             title="Settings"
           >
             <Settings size={18} className="shrink-0" />
