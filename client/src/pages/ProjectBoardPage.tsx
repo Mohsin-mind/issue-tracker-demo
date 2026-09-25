@@ -98,7 +98,7 @@ export const ProjectBoardPage: React.FC = () => {
         <div className="flex items-center gap-4">
           <Link
             to="/projects"
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
             title="Back to Projects"
           >
             <ArrowLeft size={18} />
@@ -106,16 +106,16 @@ export const ProjectBoardPage: React.FC = () => {
 
           <div>
             <div className="flex items-center gap-2.5">
-              <h1 className="font-display text-2xl font-bold text-white tracking-tight">
+              <h1 className="font-display text-2xl font-extrabold text-slate-900 tracking-tight">
                 {project?.name || 'Project Board'}
               </h1>
               {project?.key && (
-                <span className="px-2.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 text-xs font-bold font-mono">
+                <span className="px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold font-mono border border-indigo-100">
                   {project.key}
                 </span>
               )}
             </div>
-            <p className="text-slate-400 text-xs mt-0.5 line-clamp-1 max-w-2xl">
+            <p className="text-slate-500 text-xs mt-0.5 line-clamp-1 max-w-2xl font-medium">
               {project?.description || 'Interactive Kanban issue movement board.'}
             </p>
           </div>
@@ -128,14 +128,14 @@ export const ProjectBoardPage: React.FC = () => {
               {project.members.slice(0, 5).map((member) => (
                 <div
                   key={member.id}
-                  className="ring-2 ring-slate-950 rounded-full"
+                  className="ring-2 ring-white rounded-full shadow-2xs"
                   title={member.name}
                 >
                   <Avatar name={member.name} color={member.avatar_color} size="sm" />
                 </div>
               ))}
               {project.members.length > 5 && (
-                <span className="w-6 h-6 rounded-full bg-slate-800 text-slate-400 text-[10px] font-bold flex items-center justify-center ring-2 ring-slate-950">
+                <span className="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold flex items-center justify-center ring-2 ring-white shadow-2xs">
                   +{project.members.length - 5}
                 </span>
               )}

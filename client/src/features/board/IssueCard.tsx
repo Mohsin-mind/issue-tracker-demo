@@ -21,7 +21,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onClick }) =
           ref={provided.innerRef}
           {...provided.draggableProps}
           onClick={() => onClick?.(issue)}
-          className={`group relative p-3.5 rounded-xl bg-white border transition-all duration-150 select-none cursor-pointer flex flex-col gap-2.5 ${
+          className={`group relative p-4 rounded-xl bg-white border transition-all duration-150 select-none cursor-pointer flex flex-col gap-3 ${
             snapshot.isDragging
               ? 'border-indigo-500 shadow-xl shadow-indigo-500/15 bg-white rotate-1 scale-[1.02] z-50'
               : 'border-slate-200/90 hover:border-indigo-300 hover:shadow-sm shadow-xs'
@@ -40,7 +40,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onClick }) =
 
             <div
               {...provided.dragHandleProps}
-              className="text-slate-300 group-hover:text-slate-500 p-0.5 rounded cursor-grab active:cursor-grabbing transition-colors"
+              className="text-slate-300 group-hover:text-slate-500 p-1 rounded cursor-grab active:cursor-grabbing transition-colors"
               title="Drag to reorder"
             >
               <GripVertical size={14} />
@@ -72,21 +72,21 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onClick }) =
           )}
 
           {/* Bottom Meta: Due Date, Comments, Assignee */}
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+          <div className="flex items-center justify-between pt-3 mt-0.5 border-t border-slate-100 text-[11px] text-slate-500">
             <div className="flex items-center gap-3">
               {issue.due_date && (
                 <div
-                  className="flex items-center gap-1 text-slate-500"
+                  className="flex items-center gap-1.5 text-slate-500"
                   title={`Due: ${formatDate(issue.due_date)}`}
                 >
-                  <Calendar size={12} className="text-slate-400" />
+                  <Calendar size={13} className="text-slate-400" />
                   <span className="text-[10px]">{formatDate(issue.due_date)}</span>
                 </div>
               )}
 
               {commentsCount > 0 && (
-                <div className="flex items-center gap-1 text-slate-500" title={`${commentsCount} comments`}>
-                  <MessageSquare size={12} className="text-slate-400" />
+                <div className="flex items-center gap-1.5 text-slate-500" title={`${commentsCount} comments`}>
+                  <MessageSquare size={13} className="text-slate-400" />
                   <span className="text-[10px] font-medium">{commentsCount}</span>
                 </div>
               )}
